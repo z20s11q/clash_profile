@@ -1,0 +1,2071 @@
+
+tun:
+  enable: true
+  stack: mixed
+  auto-route: true
+  auto-detect-interface: true
+  dns-hijack:
+      - any:53
+
+pr:
+  &a3
+  type: select
+  proxies:
+    - DIRECT
+    - PROXY
+    - PROXY-special
+    - ♻️ 自动选择
+    - 🇭🇰 香港
+    - 🇸🇬 新加坡
+    - 🇯🇵 日本
+    - 🇹🇼 台湾
+    - 🇺🇸 美国
+    - 其他
+p:
+  &a1
+  type: http
+  interval: 3600
+  health-check:
+    enable: true
+    url: https://www.gstatic.com/generate_204
+    interval: 300
+use:
+  &a2
+  type: select
+  use:
+    - provider-fnf
+    - provider-bigport
+    - provider-sifangcai
+proxy-providers:
+  provider-fnf:
+    <<: *a1
+    url: https://sub.fnff.one/link/qiKN0nvoDhQiPWrT?clash=1
+    path: ./provider/fnf.yaml
+  provider-bigport:
+    <<: *a1
+    url: https://bigairport-sub.top/api/v1/client/subscribe?token=c8cb420c46b11afbe4612f90bf613b1d
+    path: ./provider/bigport.yaml
+  provider-sifangcai:
+    <<: *a1
+    url: https://subcdn.cos.cat/api/v1/client/SiFangCai?token=5e94daf12ab4e0ad1f79811e525539db
+    path: ./provider/sifang.yaml
+mixed-port: 7890
+socks-port: 7891
+redir-port: 7892
+external-controller: 0.0.0.0:9999
+tproxy-port: 7893
+allow-lan: true
+mode: Rule
+log-level: debug
+# dns:
+#   enable: true
+#   listen: 0.0.0.0:53
+#   enhanced-mode: fake-ip
+#   ipv6: false
+#   fake-ip-range: 198.18.0.1/16
+#   default-nameserver:
+#     - 119.29.29.29
+#     - 223.5.5.5
+#   nameserver:
+#     - 223.5.5.5
+#     - 223.6.6.6
+#     - 119.29.29.29
+#     - 114.114.114.114
+#     - https://223.5.5.5/dns-query
+#     - https://1.12.12.12/dns-query
+#     - https://120.53.53.53/dns-query
+#     - "[2402:4e00::]:53"
+#     - tls://8.8.4.4
+#     - tls://1.1.1.1
+dns:
+  enable: true
+  listen: 0.0.0.0:53
+  # enhanced-mode: fake-ip
+  ipv6: false
+  # fake-ip-range: 198.18.0.1/16
+  default-nameserver:
+    - system
+  nameserver:
+    - system
+proxies:
+  - name: aws-sg
+    type: vmess
+    server: aws-sg.zsq1.xyz
+    port: 16823
+    uuid: 5d601f1c-7b05-46e8-9d99-389b8258b02d
+    alterId: 0
+    cipher: auto
+    udp: true
+proxy-groups:
+  - name: PROXY
+    type: select
+    proxies:
+      - DIRECT
+      - REJECT
+      - 🇭🇰 香港
+      - 🇸🇬 新加坡
+      - 🇯🇵 日本
+      - 🇹🇼 台湾
+      - 🇺🇸 美国
+      - 其他
+      - ♻️ 自动选择
+  - name: PROXY-special
+    type: select
+    proxies:
+      - 🇸🇬 新加坡
+      - DIRECT
+      - ♻️ 自动选择
+      - 🇭🇰 香港
+      - 🇯🇵 日本
+      - 🇹🇼 台湾
+      - 🇺🇸 美国
+      - 其他
+  - name: 🐟 漏网之鱼
+    type: select
+    proxies:
+      - DIRECT
+      - REJECT
+      - PROXY
+  - name: 🇭🇰 香港
+    <<: *a2
+    filter: (?i)港|hk|hongkong|hong kong
+  - name: 🇸🇬 新加坡
+    proxies:
+      - aws-sg
+    <<: *a2
+    filter: (?i)^(?!.*(?:us)).*(新|sg|singapore)
+  - name: 🇯🇵 日本
+    <<: *a2
+    filter: (?i)日|jp|japan
+  - name: 🇹🇼 台湾
+    <<: *a2
+    filter: (?i)台|tw|taiwan
+  - name: 🇺🇸 美国
+    <<: *a2
+    filter: (?i)美|us|unitedstates|united states
+  - name: 其他
+    <<: *a2
+    filter: (?i)^(?!.*(?:🇭🇰|🇯🇵|🇺🇸|🇸🇬|🇨🇳|港|hk|hongkong|台|tw|taiwan|日|jp|japan|新|sg|singapore|美|us|unitedstates)).*
+  - name: Ⓜ️ 微软服务
+    type: select
+    proxies:
+      - 🇭🇰 香港
+      - DIRECT
+      - ♻️ 自动选择
+      - 🇸🇬 新加坡
+      - 🇯🇵 日本
+      - 🇹🇼 台湾
+      - 🇺🇸 美国
+      - 其他
+  - name: 🔗外网镜像源
+    <<: *a3
+  - name: 特殊程序
+    <<: *a3
+  - name: 🤖 ai网站
+    type: select
+    proxies:
+      - 🇸🇬 新加坡
+      - DIRECT
+      - ♻️ 自动选择
+      - 🇭🇰 香港
+      - 🇯🇵 日本
+      - 🇹🇼 台湾
+      - 🇺🇸 美国
+      - 其他
+  - name: 🅱️️ 哔哩哔哩港澳台
+    type: select
+    proxies:
+      - DIRECT
+      - REJECT
+      - 🇭🇰 香港
+      - 🇹🇼 台湾
+      - 🇸🇬 新加坡
+      - 🇯🇵 日本
+    filter: 香港|澳门|台湾
+    exclude-filter: 仅
+  - name: 📺 流媒体 - NETFLIX/Disney/
+    type: select
+    proxies:
+      - 🇭🇰 香港
+      - DIRECT
+      - 🇸🇬 新加坡
+      - 🇯🇵 日本
+      - 🇹🇼 台湾
+      - 🇺🇸 美国
+      - ♻️ 自动选择
+      - 其他
+  - name: 🎮️ 游戏
+    <<: *a3
+  - name: 🍎 苹果服务
+    <<: *a3
+  - name: 全部
+    <<: *a2
+  - name: 🎯 全球直连
+    type: select
+    proxies:
+      - DIRECT
+      - REJECT
+      - PROXY
+  - name: ♻️ 自动选择
+    <<: *a2
+    tolerance: 2
+    type: url-test
+  - name: 🛑 全球拦截
+    type: select
+    proxies:
+      - REJECT
+      - DIRECT
+      - PROXY
+  - name: 订阅链接/机场官网
+    type: select
+    proxies:
+      - DIRECT
+      - PROXY
+rule-providers:
+  reject:
+    type: http
+    behavior: domain
+    url: https://cdn.jsdelivr.net/gh/Loyalsoldier/clash-rules@release/reject.txt
+    path: ./ruleset/reject.yaml
+    interval: 21600
+  icloud:
+    type: http
+    behavior: domain
+    url: https://cdn.jsdelivr.net/gh/Loyalsoldier/clash-rules@release/icloud.txt
+    path: ./ruleset/icloud.yaml
+    interval: 21600
+  apple:
+    type: http
+    behavior: domain
+    url: https://cdn.jsdelivr.net/gh/Loyalsoldier/clash-rules@release/apple.txt
+    path: ./ruleset/apple.yaml
+    interval: 21600
+  GOOGLE:
+    type: http
+    behavior: domain
+    url: https://cdn.jsdelivr.net/gh/Loyalsoldier/clash-rules@release/google.txt
+    path: ./ruleset/GOOGLE.yaml
+    interval: 21600
+  proxy:
+    type: http
+    behavior: domain
+    url: https://cdn.jsdelivr.net/gh/Loyalsoldier/clash-rules@release/proxy.txt
+    path: ./ruleset/proxy.yaml
+    interval: 21600
+  direct:
+    type: http
+    behavior: domain
+    url: https://cdn.jsdelivr.net/gh/Loyalsoldier/clash-rules@release/direct.txt
+    path: ./ruleset/direct.yaml
+    interval: 21600
+  private:
+    type: http
+    behavior: domain
+    url: https://cdn.jsdelivr.net/gh/Loyalsoldier/clash-rules@release/private.txt
+    path: ./ruleset/private.yaml
+    interval: 21600
+  gfw:
+    type: http
+    behavior: domain
+    url: https://cdn.jsdelivr.net/gh/Loyalsoldier/clash-rules@release/gfw.txt
+    path: ./ruleset/gfw.yaml
+    interval: 21600
+  tld-not-cn:
+    type: http
+    behavior: domain
+    url: https://cdn.jsdelivr.net/gh/Loyalsoldier/clash-rules@release/tld-not-cn.txt
+    path: ./ruleset/tld-not-cn.yaml
+    interval: 21600
+  telegramcidr:
+    type: http
+    behavior: ipcidr
+    url: https://cdn.jsdelivr.net/gh/Loyalsoldier/clash-rules@release/telegramcidr.txt
+    path: ./ruleset/telegramcidr.yaml
+    interval: 21600
+  cncidr:
+    type: http
+    behavior: ipcidr
+    url: https://cdn.jsdelivr.net/gh/Loyalsoldier/clash-rules@release/cncidr.txt
+    path: ./ruleset/cncidr.yaml
+    interval: 21600
+  lancidr:
+    type: http
+    behavior: ipcidr
+    url: https://cdn.jsdelivr.net/gh/Loyalsoldier/clash-rules@release/lancidr.txt
+    path: ./ruleset/lancidr.yaml
+    interval: 21600
+  applications:
+    type: http
+    behavior: classical
+    url: https://cdn.jsdelivr.net/gh/Loyalsoldier/clash-rules@release/applications.txt
+    path: ./ruleset/applications.yaml
+    interval: 21600
+rules:
+  - DOMAIN-KEYWORD,gvt3,🛑 全球拦截
+  - DOMAIN-KEYWORD,gvt2,🛑 全球拦截
+  - DOMAIN-KEYWORD,metacubex,PROXY
+  - DOMAIN-SUFFIX,cos.cat,PROXY
+  - DOMAIN-KEYWORD,chaoniu360,🎯 全球直连
+  - DOMAIN-KEYWORD,pypi,🔗外网镜像源
+  - DOMAIN-KEYWORD,huggingface,PROXY
+  - DOMAIN-KEYWORD,fnff,PROXY
+  - DOMAIN,steam-chat.com,PROXY
+  - DOMAIN-SUFFIX,bigairport-sub.top,PROXY
+  - DOMAIN-SUFFIX,vercel.app,PROXY
+  - DOMAIN-KEYWORD,cloudflare,PROXY
+  - PROCESS-NAME,pycharm64.exe,特殊程序
+  - IP-CIDR,192.168.0.0/16,DIRECT
+  - DOMAIN-KEYWORD,steamstatic,PROXY
+  - SRC-PORT,81,PROXY
+  - DOMAIN-KEYWORD,amazon,PROXY
+  - DOMAIN-KEYWORD,jetbrains,PROXY
+  - DOMAIN-SUFFIX,xfantazy.com,PROXY
+  - DOMAIN-SUFFIX,missav.com,PROXY
+  - DOMAIN-KEYWORD,sentry,🤖 ai网站
+  - DOMAIN-SUFFIX,google.cn,PROXY
+  - DOMAIN-SUFFIX,bard.google.com,🤖 ai网站
+  - DOMAIN-KEYWORD,github,PROXY
+  - DOMAIN-KEYWORD,mxwljsq,订阅链接/机场官网
+  - DOMAIN-SUFFIX,maoxiongnet.com,订阅链接/机场官网
+  - DOMAIN-KEYWORD,google,PROXY
+  - DOMAIN-SUFFIX,googleapi.com,PROXY
+  - DOMAIN-SUFFIX,arxiv.org,🎯 全球直连
+  - DOMAIN-SUFFIX,anthropic.com,🤖 ai网站
+  - DOMAIN-SUFFIX,openai.com,🤖 ai网站
+  - DOMAIN-SUFFIX,google.com,PROXY
+  - DOMAIN,translate.google.com,PROXY
+  - DOMAIN-SUFFIX,bafang.vip,PROXY
+  - DOMAIN,zh.gluon.ai,PROXY
+  - DOMAIN-KEYWORD,wolframalpha,PROXY
+  - DOMAIN-KEYWORD,tgbak,PROXY
+  - DOMAIN-SUFFIX,test-ipv6.com,🎯 全球直连
+  - DOMAIN-SUFFIX,machbbs.com,PROXY
+  - PROCESS-NAME,XboxPcApp.exe,Ⓜ️ 微软服务
+  - PROCESS-NAME,tailscaled.exe,🎯 全球直连
+  - SRC-PORT,9993,PROXY
+  - DOMAIN-SUFFIX,zerotier.com,PROXY
+  - DST-PORT,2222,PROXY
+  - DST-PORT,3443,PROXY
+  - DST-PORT,22,PROXY
+  - IP-CIDR,39.104.66.72/32,PROXY,no-resolve
+  - DOMAIN,clash.razord.top,PROXY
+  - DOMAIN,store.steampowered.com,PROXY
+  - IP-CIDR,222.174.213.210/32,🎯 全球直连,no-resolve
+  - DOMAIN-SUFFIX,csdn.net,🎯 全球直连
+  - DOMAIN-SUFFIX,bing.com,Ⓜ️ 微软服务
+  - DOMAIN-SUFFIX,zztt15.com,PROXY
+  - IP-CIDR,202.194.40.140/32,🎯 全球直连,no-resolve
+  - DOMAIN,dl.google.com,PROXY
+  - DOMAIN,hk.mirrors.thegigabit.com,🔗外网镜像源
+  - DOMAIN,us.archive.ubuntu.com,🔗外网镜像源
+  - DOMAIN,cn.archive.ubuntu.com,🎯 全球直连
+  - DOMAIN-SUFFIX,sdu.edu.cn,🎯 全球直连
+  - DOMAIN-SUFFIX,cableav.tv,PROXY
+  - DOMAIN-KEYWORD,deepl,PROXY
+  - DOMAIN-SUFFIX,deepl.com,PROXY
+  - DOMAIN-KEYWORD,speedtest,PROXY
+  - DOMAIN-KEYWORD,steamcommunity,PROXY
+  - DOMAIN-SUFFIX,steamcommunity.com,PROXY
+  - DOMAIN-SUFFIX,ipip.net,PROXY
+  - DOMAIN-SUFFIX,fikfap.com,PROXY
+  - DOMAIN-SUFFIX,yuketang.cn,🎯 全球直连
+  - DOMAIN-SUFFIX,gitee.com,🎯 全球直连
+  - DOMAIN-SUFFIX,zhihuishu.com,🎯 全球直连
+  - DOMAIN-KEYWORD,1drv,Ⓜ️ 微软服务
+  - DOMAIN-KEYWORD,microsoft,Ⓜ️ 微软服务
+  - DOMAIN-SUFFIX,aadrm.com,Ⓜ️ 微软服务
+  - DOMAIN-SUFFIX,acompli.com,Ⓜ️ 微软服务
+  - DOMAIN-SUFFIX,acompli.net,Ⓜ️ 微软服务
+  - DOMAIN-SUFFIX,aka.ms,Ⓜ️ 微软服务
+  - DOMAIN-SUFFIX,akadns.net,Ⓜ️ 微软服务
+  - DOMAIN-SUFFIX,aspnetcdn.com,Ⓜ️ 微软服务
+  - DOMAIN-SUFFIX,assets-yammer.com,Ⓜ️ 微软服务
+  - DOMAIN-SUFFIX,azure.com,Ⓜ️ 微软服务
+  - DOMAIN-SUFFIX,azure.net,Ⓜ️ 微软服务
+  - DOMAIN-SUFFIX,azureedge.net,Ⓜ️ 微软服务
+  - DOMAIN-SUFFIX,azurerms.com,Ⓜ️ 微软服务
+  - DOMAIN-SUFFIX,cloudapp.net,Ⓜ️ 微软服务
+  - DOMAIN-SUFFIX,cloudappsecurity.com,Ⓜ️ 微软服务
+  - DOMAIN-SUFFIX,edgesuite.net,Ⓜ️ 微软服务
+  - DOMAIN-SUFFIX,gfx.ms,Ⓜ️ 微软服务
+  - DOMAIN-SUFFIX,hotmail.com,Ⓜ️ 微软服务
+  - DOMAIN-SUFFIX,live.com,Ⓜ️ 微软服务
+  - DOMAIN-SUFFIX,live.net,Ⓜ️ 微软服务
+  - DOMAIN-SUFFIX,lync.com,Ⓜ️ 微软服务
+  - DOMAIN-SUFFIX,msappproxy.net,Ⓜ️ 微软服务
+  - DOMAIN-SUFFIX,msauth.net,Ⓜ️ 微软服务
+  - DOMAIN-SUFFIX,msauthimages.net,Ⓜ️ 微软服务
+  - DOMAIN-SUFFIX,msecnd.net,Ⓜ️ 微软服务
+  - DOMAIN-SUFFIX,msedge.net,Ⓜ️ 微软服务
+  - DOMAIN-SUFFIX,msft.net,Ⓜ️ 微软服务
+  - DOMAIN-SUFFIX,msftauth.net,Ⓜ️ 微软服务
+  - DOMAIN-SUFFIX,msftauthimages.net,Ⓜ️ 微软服务
+  - DOMAIN-SUFFIX,msftidentity.com,Ⓜ️ 微软服务
+  - DOMAIN-SUFFIX,msidentity.com,Ⓜ️ 微软服务
+  - DOMAIN-SUFFIX,msn.cn,Ⓜ️ 微软服务
+  - DOMAIN-SUFFIX,msn.com,Ⓜ️ 微软服务
+  - DOMAIN-SUFFIX,msocdn.com,Ⓜ️ 微软服务
+  - DOMAIN-SUFFIX,msocsp.com,Ⓜ️ 微软服务
+  - DOMAIN-SUFFIX,mstea.ms,Ⓜ️ 微软服务
+  - DOMAIN-SUFFIX,o365weve.com,Ⓜ️ 微软服务
+  - DOMAIN-SUFFIX,oaspapps.com,Ⓜ️ 微软服务
+  - DOMAIN-SUFFIX,office.com,Ⓜ️ 微软服务
+  - DOMAIN-SUFFIX,office.net,Ⓜ️ 微软服务
+  - DOMAIN-SUFFIX,office365.com,Ⓜ️ 微软服务
+  - DOMAIN-SUFFIX,officeppe.net,Ⓜ️ 微软服务
+  - DOMAIN-SUFFIX,omniroot.com,Ⓜ️ 微软服务
+  - DOMAIN-SUFFIX,onedrive.com,Ⓜ️ 微软服务
+  - DOMAIN-SUFFIX,onenote.com,Ⓜ️ 微软服务
+  - DOMAIN-SUFFIX,onenote.net,Ⓜ️ 微软服务
+  - DOMAIN-SUFFIX,onestore.ms,Ⓜ️ 微软服务
+  - DOMAIN-SUFFIX,outlook.com,Ⓜ️ 微软服务
+  - DOMAIN-SUFFIX,outlookmobile.com,Ⓜ️ 微软服务
+  - DOMAIN-SUFFIX,phonefactor.net,Ⓜ️ 微软服务
+  - DOMAIN-SUFFIX,public-trust.com,Ⓜ️ 微软服务
+  - DOMAIN-SUFFIX,sfbassets.com,Ⓜ️ 微软服务
+  - DOMAIN-SUFFIX,sfx.ms,Ⓜ️ 微软服务
+  - DOMAIN-SUFFIX,sharepoint.com,Ⓜ️ 微软服务
+  - DOMAIN-SUFFIX,sharepointonline.com,Ⓜ️ 微软服务
+  - DOMAIN-SUFFIX,skype.com,Ⓜ️ 微软服务
+  - DOMAIN-SUFFIX,skypeassets.com,Ⓜ️ 微软服务
+  - DOMAIN-SUFFIX,skypeforbusiness.com,Ⓜ️ 微软服务
+  - DOMAIN-SUFFIX,staffhub.ms,Ⓜ️ 微软服务
+  - DOMAIN-SUFFIX,svc.ms,Ⓜ️ 微软服务
+  - DOMAIN-SUFFIX,sway-cdn.com,Ⓜ️ 微软服务
+  - DOMAIN-SUFFIX,sway-extensions.com,Ⓜ️ 微软服务
+  - DOMAIN-SUFFIX,sway.com,Ⓜ️ 微软服务
+  - DOMAIN-SUFFIX,trafficmanager.net,Ⓜ️ 微软服务
+  - DOMAIN-SUFFIX,uservoice.com,Ⓜ️ 微软服务
+  - DOMAIN-SUFFIX,virtualearth.net,Ⓜ️ 微软服务
+  - DOMAIN-SUFFIX,visualstudio.com,Ⓜ️ 微软服务
+  - DOMAIN-SUFFIX,windows-ppe.net,Ⓜ️ 微软服务
+  - DOMAIN-SUFFIX,windows.com,Ⓜ️ 微软服务
+  - DOMAIN-SUFFIX,windows.net,Ⓜ️ 微软服务
+  - DOMAIN-SUFFIX,windowsazure.com,Ⓜ️ 微软服务
+  - DOMAIN-SUFFIX,windowsupdate.com,Ⓜ️ 微软服务
+  - DOMAIN-SUFFIX,wunderlist.com,Ⓜ️ 微软服务
+  - DOMAIN-SUFFIX,yammer.com,Ⓜ️ 微软服务
+  - DOMAIN-SUFFIX,yammerusercontent.com,Ⓜ️ 微软服务
+  - DOMAIN,e13252.dscg.akamaiedge.net,📺 流媒体 - NETFLIX/Disney/
+  - DOMAIN,h-netflix.online-metrix.net,📺 流媒体 - NETFLIX/Disney/
+  - DOMAIN,netflix.com.edgesuite.net,📺 流媒体 - NETFLIX/Disney/
+  - DOMAIN-SUFFIX,fast.com,📺 流媒体 - NETFLIX/Disney/
+  - DOMAIN-SUFFIX,flxvpn.net,📺 流媒体 - NETFLIX/Disney/
+  - DOMAIN-SUFFIX,netflix.ca,📺 流媒体 - NETFLIX/Disney/
+  - DOMAIN-SUFFIX,netflix.com,📺 流媒体 - NETFLIX/Disney/
+  - DOMAIN-SUFFIX,netflix.com.au,📺 流媒体 - NETFLIX/Disney/
+  - DOMAIN-SUFFIX,netflix.com.edgesuite.net,📺 流媒体 - NETFLIX/Disney/
+  - DOMAIN-SUFFIX,netflix.net,📺 流媒体 - NETFLIX/Disney/
+  - DOMAIN-SUFFIX,netflixdnstest0.com,📺 流媒体 - NETFLIX/Disney/
+  - DOMAIN-SUFFIX,netflixdnstest1.com,📺 流媒体 - NETFLIX/Disney/
+  - DOMAIN-SUFFIX,netflixdnstest10.com,📺 流媒体 - NETFLIX/Disney/
+  - DOMAIN-SUFFIX,netflixdnstest2.com,📺 流媒体 - NETFLIX/Disney/
+  - DOMAIN-SUFFIX,netflixdnstest3.com,📺 流媒体 - NETFLIX/Disney/
+  - DOMAIN-SUFFIX,netflixdnstest4.com,📺 流媒体 - NETFLIX/Disney/
+  - DOMAIN-SUFFIX,netflixdnstest5.com,📺 流媒体 - NETFLIX/Disney/
+  - DOMAIN-SUFFIX,netflixdnstest6.com,📺 流媒体 - NETFLIX/Disney/
+  - DOMAIN-SUFFIX,netflixdnstest7.com,📺 流媒体 - NETFLIX/Disney/
+  - DOMAIN-SUFFIX,netflixdnstest8.com,📺 流媒体 - NETFLIX/Disney/
+  - DOMAIN-SUFFIX,netflixdnstest9.com,📺 流媒体 - NETFLIX/Disney/
+  - DOMAIN-SUFFIX,netflixinvestor.com,📺 流媒体 - NETFLIX/Disney/
+  - DOMAIN-SUFFIX,netflixstudios.com,📺 流媒体 - NETFLIX/Disney/
+  - DOMAIN-SUFFIX,netflixtechblog.com,📺 流媒体 - NETFLIX/Disney/
+  - DOMAIN-SUFFIX,nflxext.com,📺 流媒体 - NETFLIX/Disney/
+  - DOMAIN-SUFFIX,nflximg.com,📺 流媒体 - NETFLIX/Disney/
+  - DOMAIN-SUFFIX,nflximg.net,📺 流媒体 - NETFLIX/Disney/
+  - DOMAIN-SUFFIX,nflxsearch.net,📺 流媒体 - NETFLIX/Disney/
+  - DOMAIN-SUFFIX,nflxso.net,📺 流媒体 - NETFLIX/Disney/
+  - DOMAIN-SUFFIX,nflxvideo.net,📺 流媒体 - NETFLIX/Disney/
+  - DOMAIN-SUFFIX,us-west-2.amazonaws.com,📺 流媒体 - NETFLIX/Disney/
+  - DOMAIN-KEYWORD,apiproxy-device-prod-nlb-,📺 流媒体 - NETFLIX/Disney/
+  - DOMAIN-KEYWORD,dualstack.apiproxy-,📺 流媒体 - NETFLIX/Disney/
+  - DOMAIN-KEYWORD,dualstack.ichnaea-web-,📺 流媒体 - NETFLIX/Disney/
+  - DOMAIN-KEYWORD,netflixdnstest,📺 流媒体 - NETFLIX/Disney/
+  - IP-CIDR,103.87.204.0/22,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,107.23.255.0/26,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,108.128.160.0/23,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,108.128.162.0/24,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,108.136.122.0/25,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,108.136.154.16/28,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,108.136.154.32/27,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,108.136.38.192/26,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,108.137.114.0/28,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,108.137.114.64/26,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,108.175.32.0/20,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,13.112.191.184/29,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,13.113.196.64/26,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,13.113.203.0/24,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,13.124.145.16/28,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,13.124.145.64/26,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,13.124.199.0/24,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,13.124.247.0/24,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,13.126.23.136/29,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,13.126.23.144/28,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,13.126.23.160/27,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,13.126.23.192/27,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,13.126.243.0/24,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,13.127.70.128/27,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,13.127.70.160/29,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,13.208.131.0/27,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,13.208.131.128/26,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,13.208.131.192/27,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,13.208.131.224/29,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,13.208.131.232/30,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,13.208.131.32/28,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,13.208.177.224/27,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,13.208.180.0/24,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,13.208.194.0/23,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,13.208.217.64/26,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,13.208.227.0/24,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,13.208.228.0/25,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,13.208.228.128/29,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,13.208.228.136/30,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,13.208.33.16/28,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,13.208.33.8/29,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,13.209.1.0/28,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,13.209.1.56/29,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,13.209.1.96/27,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,13.209.71.128/27,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,13.209.71.224/27,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,13.210.2.192/26,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,13.210.67.128/26,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,13.211.12.160/27,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,13.211.12.192/27,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,13.211.12.248/29,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,13.211.166.192/28,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,13.212.132.0/22,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,13.212.209.128/26,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,13.212.209.94/31,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,13.212.209.96/27,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,13.213.20.132/30,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,13.213.20.136/29,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,13.213.20.144/28,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,13.213.20.160/28,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,13.213.21.0/24,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,13.213.22.0/23,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,13.213.24.0/23,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,13.213.75.224/29,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,13.214.224.0/23,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,13.214.228.0/22,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,13.215.92.0/24,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,13.215.93.0/25,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,13.215.93.128/26,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,13.225.176.0/21,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,13.227.228.0/24,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,13.228.69.0/24,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,13.229.187.192/27,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,13.229.187.232/29,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,13.230.21.128/26,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,13.230.21.224/27,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,13.231.6.104/29,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,13.231.6.112/28,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,13.231.6.192/28,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,13.231.6.208/29,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,13.231.6.64/27,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,13.232.67.128/26,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,13.233.177.0/29,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,13.233.177.192/26,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,13.233.177.32/27,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,13.234.221.136/29,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,13.235.197.96/27,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,13.235.228.0/24,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,13.235.6.0/23,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,13.236.8.0/25,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,13.236.82.128/27,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,13.236.82.96/27,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,13.239.158.0/29,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,13.244.121.196/30,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,13.244.132.0/23,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,13.244.202.40/29,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,13.244.244.192/26,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,13.244.33.0/25,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,13.244.33.128/26,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,13.245.1.32/27,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,13.245.112.0/23,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,13.245.114.0/24,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,13.245.127.232/30,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,13.245.155.128/27,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,13.245.155.224/27,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,13.245.166.128/29,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,13.245.166.176/29,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,13.245.93.140/30,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,13.245.93.160/29,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,13.245.93.176/28,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,13.245.93.192/28,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,13.246.108.0/22,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,13.246.120.0/22,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,13.246.70.0/23,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,13.248.224.0/21,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,13.248.232.0/23,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,13.250.186.0/28,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,13.250.186.128/26,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,13.250.186.16/29,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,13.250.186.192/28,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,13.250.186.208/29,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,13.33.142.0/24,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,13.35.23.0/24,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,13.36.155.0/24,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,13.36.18.0/28,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,13.36.18.32/27,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,13.36.18.64/27,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,13.36.76.0/23,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,13.36.78.0/24,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,13.36.84.112/29,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,13.36.84.24/29,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,13.36.84.32/30,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,13.36.84.44/30,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,13.36.84.48/28,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,13.36.84.64/28,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,13.38.132.0/22,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,13.38.140.0/23,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,13.40.202.0/23,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,13.40.204.0/22,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,13.48.186.128/26,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,13.48.32.0/24,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,13.48.4.128/27,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,13.48.4.160/28,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,13.48.4.192/29,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,13.48.4.200/30,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,13.48.4.208/28,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,13.48.4.224/29,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,13.48.74.0/24,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,13.49.253.224/27,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,13.49.42.0/23,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,13.51.120.0/24,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,13.51.253.80/29,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,13.51.29.0/26,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,13.51.71.152/29,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,13.51.71.160/30,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,13.51.71.176/28,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,13.51.71.192/28,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,13.51.95.0/24,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,13.51.96.0/23,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,13.52.1.0/27,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,13.52.1.32/29,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,13.52.110.192/26,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,13.52.146.128/28,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,13.52.200.160/27,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,13.52.201.0/24,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,13.52.202.0/24,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,13.52.232.224/27,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,13.52.32.96/27,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,13.52.6.112/29,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,13.53.63.128/26,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,13.53.63.192/27,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,13.54.63.128/26,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,13.55.255.216/29,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,13.56.112.168/29,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,13.56.32.200/29,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,13.57.180.176/28,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,13.57.180.208/28,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,13.57.180.64/26,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,13.59.250.0/26,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,130.176.0.0/18,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,130.176.128.0/21,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,130.176.136.0/23,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,130.176.140.0/22,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,130.176.144.0/20,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,130.176.160.0/19,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,130.176.64.0/21,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,130.176.72.0/22,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,130.176.76.0/24,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,130.176.78.0/23,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,130.176.80.0/22,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,130.176.86.0/23,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,130.176.88.0/21,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,130.176.96.0/19,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,15.152.10.0/24,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,15.152.133.112/28,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,15.152.133.128/28,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,15.152.174.0/23,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,15.152.176.0/22,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,15.152.24.0/26,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,15.152.24.128/29,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,15.160.55.112/29,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,15.161.135.164/30,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,15.161.135.64/26,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,15.161.140.0/23,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,15.161.192.240/28,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,15.161.247.128/27,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,15.161.247.64/26,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,15.161.66.0/25,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,15.161.66.128/26,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,15.164.156.0/23,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,15.164.243.0/28,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,15.164.243.192/27,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,15.164.243.32/27,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,15.165.224.0/23,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,15.184.125.0/25,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,15.184.125.128/26,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,15.184.125.224/29,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,15.184.125.232/30,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,15.184.125.240/28,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,15.184.153.0/28,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,15.184.184.96/29,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,15.184.70.200/29,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,15.184.70.224/29,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,15.185.141.160/27,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,15.185.144.0/23,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,15.185.33.32/27,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,15.185.33.64/26,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,15.185.91.32/27,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,15.188.102.0/27,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,15.188.184.0/24,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,15.188.210.196/30,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,15.188.210.200/30,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,15.188.210.32/27,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,15.188.210.64/27,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,15.200.141.0/25,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,15.200.176.128/28,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,15.200.28.240/28,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,15.200.28.80/30,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,15.200.28.88/29,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,15.205.82.0/23,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,15.205.84.0/23,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,15.207.13.128/25,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,15.207.213.128/25,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,15.222.16.32/27,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,15.222.16.8/29,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,15.222.16.96/27,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,15.222.43.0/27,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,15.222.43.64/26,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,15.223.100.0/24,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,15.223.102.0/23,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,15.223.52.0/23,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,15.228.103.240/29,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,15.228.104.0/23,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,15.228.106.0/24,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,15.228.107.0/27,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,15.228.126.200/29,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,15.228.126.48/30,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,15.228.126.72/30,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,15.228.129.0/24,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,15.228.144.0/24,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,15.228.151.0/24,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,15.228.64.0/22,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,15.228.72.64/26,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,15.228.92.192/26,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,15.228.97.0/24,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,15.229.36.0/23,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,15.229.40.0/23,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,15.236.80.0/23,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,157.175.102.128/26,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,157.175.102.96/27,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,157.175.140.0/23,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,157.175.255.0/24,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,157.241.2.0/23,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,157.241.25.0/24,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,16.16.2.0/23,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,16.162.162.96/29,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,16.162.52.0/24,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,16.163.196.0/22,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,16.163.206.0/23,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,16.171.48.0/22,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,16.50.67.0/25,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,16.50.67.128/26,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,16.50.69.192/27,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,16.62.188.224/28,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,16.62.54.0/25,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,16.62.56.224/27,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,16.62.7.192/26,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,160.1.128.0/24,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,176.34.159.192/26,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,177.71.207.128/26,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,18.100.209.192/28,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,18.100.64.128/25,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,18.100.65.0/26,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,18.102.2.0/23,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,18.117.239.68/30,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,18.130.91.144/29,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,18.132.21.0/24,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,18.132.22.0/23,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,18.134.255.160/27,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,18.134.255.192/26,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,18.134.68.0/22,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,18.135.226.192/26,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,18.136.1.192/26,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,18.138.134.128/25,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,18.138.244.0/23,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,18.139.204.176/28,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,18.139.204.192/27,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,18.140.177.0/25,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,18.141.148.128/25,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,18.141.150.0/23,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,18.141.152.0/24,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,18.141.154.0/23,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,18.141.238.68/30,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,18.141.66.248/29,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,18.144.158.0/27,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,18.144.184.0/23,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,18.144.76.128/25,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,18.144.76.32/29,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,18.156.52.0/24,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,18.156.54.0/23,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,18.162.127.0/26,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,18.162.127.64/27,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,18.162.189.0/24,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,18.162.221.128/26,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,18.162.221.192/27,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,18.163.139.32/27,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,18.163.201.96/27,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,18.163.204.0/23,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,18.166.237.128/27,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,18.166.237.64/26,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,18.167.111.0/24,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,18.167.112.0/23,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,18.167.88.72/29,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,18.167.88.80/30,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,18.167.88.96/27,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,18.168.133.0/24,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,18.168.33.0/24,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,18.168.34.0/23,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,18.168.36.0/24,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,18.168.37.0/27,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,18.168.37.136/29,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,18.168.37.144/30,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,18.168.37.160/27,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,18.168.37.32/28,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,18.168.37.48/30,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,18.168.37.64/26,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,18.169.230.136/30,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,18.169.230.200/29,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,18.176.203.120/30,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,18.179.48.128/27,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,18.179.48.96/27,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,18.180.178.0/24,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,18.180.180.0/23,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,18.180.88.0/23,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,18.182.96.64/26,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,18.184.138.224/27,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,18.184.2.128/25,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,18.184.203.128/27,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,18.188.9.0/26,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,18.188.9.64/29,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,18.188.9.80/28,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,18.192.142.0/23,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,18.192.216.0/22,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,18.196.161.0/26,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,18.196.161.184/29,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,18.196.161.192/28,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,18.196.161.80/28,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,18.200.212.0/23,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,18.202.216.48/29,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,18.206.107.160/29,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,18.206.107.24/29,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,18.209.113.240/28,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,18.209.113.64/27,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,18.213.156.96/28,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,18.216.170.128/25,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,18.217.41.192/27,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,18.217.41.64/26,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,18.228.1.0/28,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,18.228.1.16/29,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,18.228.70.32/29,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,18.229.100.0/26,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,18.229.100.112/29,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,18.229.100.128/25,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,18.229.220.192/26,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,18.229.37.0/26,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,18.229.70.96/27,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,18.229.99.0/24,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,18.230.103.0/24,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,18.230.104.0/23,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,18.230.46.0/26,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,18.230.54.0/23,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,18.231.105.0/28,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,18.231.105.128/26,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,18.231.194.8/29,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,18.232.1.128/25,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,18.232.1.32/27,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,18.232.1.64/26,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,18.236.61.0/25,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,18.237.140.160/29,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,18.252.145.156/30,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,18.252.145.160/28,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,18.252.145.192/27,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,18.252.165.140/30,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,18.252.4.0/30,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,18.252.4.16/29,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,18.252.56.0/23,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,18.253.186.0/24,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,18.254.140.0/22,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,18.254.148.0/22,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,18.254.68.0/23,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,18.60.64.192/26,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,18.60.68.0/25,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,18.60.78.192/27,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,18.60.78.240/28,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,185.2.220.0/22,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,185.9.188.0/22,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,192.173.64.0/18,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,198.38.96.0/19,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,198.45.48.0/20,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,203.116.0.0/16,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,203.198.0.0/20,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,203.198.80.0/21,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,203.75.84.0/24,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,203.83.220.0/22,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,204.246.166.0/24,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,205.251.218.0/24,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,207.45.72.0/22,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,208.75.76.0/22,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,210.0.153.0/24,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,218.102.32.0/19,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,219.76.0.0/17,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,23.23.189.144/28,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,23.246.0.0/18,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,23.78.0.0/16,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,3.0.5.224/27,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,3.0.5.32/29,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,3.10.127.32/27,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,3.10.17.0/24,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,3.10.201.64/27,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,3.101.100.128/25,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,3.101.145.192/26,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,3.101.156.0/26,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,3.101.157.128/25,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,3.101.158.0/23,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,3.101.160.240/29,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,3.101.160.44/30,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,3.101.160.48/28,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,3.101.161.0/24,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,3.101.162.0/24,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,3.101.163.0/26,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,3.101.163.64/27,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,3.101.163.96/28,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,3.101.164.0/24,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,3.101.176.0/24,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,3.101.177.20/30,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,3.101.177.48/29,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,3.101.200.0/24,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,3.101.201.128/25,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,3.101.202.0/23,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,3.101.208.0/24,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,3.101.209.0/26,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,3.101.52.208/29,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,3.105.172.0/22,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,3.105.5.0/26,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,3.108.13.124/30,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,3.109.72.0/25,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,3.109.72.152/29,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,3.11.53.0/24,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,3.111.110.0/23,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,3.111.251.0/24,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,3.111.90.0/23,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,3.112.162.0/23,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,3.112.23.0/29,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,3.112.85.96/27,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,3.112.96.0/25,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,3.112.96.128/26,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,3.113.218.112/28,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,3.113.218.128/27,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,3.113.218.68/30,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,3.113.218.72/29,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,3.114.164.0/22,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,3.12.216.0/22,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,3.12.23.88/29,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,3.120.181.224/27,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,3.120.181.40/29,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,3.123.14.0/24,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,3.123.15.0/25,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,3.123.44.0/27,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,3.123.44.128/26,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,3.123.44.80/28,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,3.123.44.96/27,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,3.127.48.244/30,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,3.127.48.248/30,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,3.127.74.0/23,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,3.128.93.0/24,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,3.134.215.0/24,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,3.139.136.128/27,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,3.139.136.184/30,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,3.139.136.192/26,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,3.140.136.128/27,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,3.141.102.184/29,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,3.141.102.192/30,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,3.141.102.208/28,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,3.141.102.224/28,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,3.141.252.0/22,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,3.142.0.0/21,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,3.143.206.104/29,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,3.144.141.192/26,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,3.145.220.0/22,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,3.145.230.0/24,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,3.145.31.0/26,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,3.15.35.0/24,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,3.15.36.0/26,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,3.16.146.0/29,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,3.18.132.0/25,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,3.19.147.0/24,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,3.208.72.176/28,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,3.209.202.48/28,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,3.209.83.0/25,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,3.209.83.144/28,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,3.209.83.160/27,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,3.209.83.192/26,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,3.209.84.0/24,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,3.209.85.0/25,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,3.209.85.128/26,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,3.209.85.192/27,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,3.209.87.0/24,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,3.21.86.0/23,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,3.216.135.0/24,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,3.216.136.0/21,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,3.216.144.0/23,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,3.216.148.0/22,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,3.216.99.160/27,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,3.217.228.0/22,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,3.218.180.0/22,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,3.227.4.0/22,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,3.228.170.0/23,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,3.228.172.0/23,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,3.228.181.0/24,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,3.228.182.0/31,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,3.228.182.10/32,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,3.228.182.100/32,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,3.228.182.46/31,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,3.228.182.48/28,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,3.228.182.5/32,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,3.228.182.6/31,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,3.228.182.64/27,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,3.228.182.8/31,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,3.228.182.96/30,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,3.231.2.0/25,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,3.234.232.224/27,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,3.235.112.0/21,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,3.235.189.96/29,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,3.235.26.0/23,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,3.235.32.0/21,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,3.236.169.192/26,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,3.236.48.0/23,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,3.238.166.0/24,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,3.238.178.100/30,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,3.238.178.104/29,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,3.238.178.112/29,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,3.238.178.120/31,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,3.238.178.128/25,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,3.238.207.0/26,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,3.238.207.128/25,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,3.238.208.0/23,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,3.238.210.0/25,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,3.238.212.0/22,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,3.238.216.128/25,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,3.239.152.0/22,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,3.239.156.0/31,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,3.239.156.10/31,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,3.239.156.100/30,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,3.239.156.104/29,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,3.239.156.112/29,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,3.239.157.188/30,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,3.239.157.19/32,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,3.239.157.192/26,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,3.239.157.2/31,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,3.239.157.20/30,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,3.239.157.24/29,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,3.239.157.32/27,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,3.239.157.4/30,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,3.239.157.64/27,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,3.239.157.8/31,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,3.239.157.96/30,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,3.24.1.208/28,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,3.248.176.0/22,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,3.248.180.128/25,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,3.248.180.40/29,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,3.248.180.64/26,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,3.248.186.0/26,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,3.248.186.128/25,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,3.248.186.64/29,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,3.248.186.92/30,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,3.248.216.32/27,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,3.248.244.240/30,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,3.248.245.0/24,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,3.248.246.0/23,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,3.249.28.0/23,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,3.25.248.0/22,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,3.25.37.128/25,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,3.25.38.0/23,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,3.25.40.0/24,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,3.25.43.0/24,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,3.25.44.0/23,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,3.25.47.28/30,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,3.25.47.32/30,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,3.251.104.0/26,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,3.251.104.128/25,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,3.251.105.0/24,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,3.251.109.92/30,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,3.251.110.208/28,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,3.251.110.224/28,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,3.251.144.0/29,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,3.251.148.120/29,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,3.251.152.44/30,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,3.251.56.0/24,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,3.251.62.128/25,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,3.251.94.0/24,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,3.251.95.128/27,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,3.251.95.96/27,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,3.253.134.0/23,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,3.253.148.0/22,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,3.253.174.0/23,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,3.253.184.0/22,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,3.253.188.0/24,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,3.26.109.216/30,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,3.26.127.24/29,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,3.26.138.0/23,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,3.26.246.0/23,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,3.26.248.0/22,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,3.26.58.224/27,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,3.26.81.0/26,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,3.26.82.236/30,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,3.26.82.240/29,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,3.26.83.0/24,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,3.26.84.0/22,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,3.26.88.0/27,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,3.28.255.80/28,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,3.28.63.128/25,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,3.28.65.0/26,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,3.28.70.48/28,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,3.28.70.96/27,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,3.29.40.128/25,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,3.29.40.64/26,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,3.29.57.0/26,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,3.30.129.0/24,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,3.30.130.0/23,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,3.30.204.0/24,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,3.30.40.84/30,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,3.32.139.0/24,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,3.32.190.244/30,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,3.32.190.248/29,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,3.34.37.0/24,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,3.34.38.0/23,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,3.34.89.192/29,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,3.34.89.64/26,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,3.35.130.128/25,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,3.35.160.0/22,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,3.36.167.128/25,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,3.36.167.28/30,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,3.36.167.48/29,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,3.36.167.64/27,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,3.36.190.0/23,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,3.36.192.0/22,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,3.36.202.0/25,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,3.36.245.204/30,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,3.36.245.232/30,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,3.36.3.160/28,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,3.36.3.192/26,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,3.36.3.96/27,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,3.38.229.0/25,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,3.38.248.0/23,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,3.38.90.8/29,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,3.39.113.0/24,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,3.39.114.0/23,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,3.39.116.0/26,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,3.39.82.128/25,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,3.6.70.76/30,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,3.64.1.0/25,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,3.64.1.128/26,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,3.64.1.192/28,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,3.64.226.232/29,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,3.64.226.240/30,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,3.65.124.0/22,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,3.65.128.0/21,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,3.65.246.0/27,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,3.66.172.0/24,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,3.68.251.176/30,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,3.68.251.232/29,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,3.7.10.0/23,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,3.7.25.48/30,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,3.70.195.128/25,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,3.70.195.64/26,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,3.70.211.0/25,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,3.71.104.0/24,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,3.71.120.0/22,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,3.72.168.0/24,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,3.72.33.128/25,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,3.8.37.24/29,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,3.8.37.96/27,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,3.9.159.64/29,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,3.9.159.72/30,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,3.9.41.0/26,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,3.9.41.64/27,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,3.9.94.0/24,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,3.96.2.68/30,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,3.96.2.72/30,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,3.97.192.112/29,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,3.97.192.128/25,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,3.97.20.0/22,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,3.97.217.0/24,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,3.97.218.0/23,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,3.97.230.0/25,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,3.97.49.128/25,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,3.97.99.128/26,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,3.97.99.64/28,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,3.97.99.96/27,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,3.98.171.196/30,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,3.98.171.224/29,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,3.98.171.92/30,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,3.98.24.0/27,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,3.98.86.0/23,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,3.99.194.0/23,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,3.99.196.0/22,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,34.192.0.0/16,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,34.195.252.0/24,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,34.195.253.0/25,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,34.208.0.0/12,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,34.226.106.180/32,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,34.226.14.0/24,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,34.228.4.208/28,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,34.231.114.205/32,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,34.231.213.21/32,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,34.236.241.44/30,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,34.238.188.0/29,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,34.242.153.128/26,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,34.242.153.224/27,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,34.245.205.0/27,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,34.245.205.128/28,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,34.245.205.160/27,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,34.245.205.64/26,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,34.245.82.0/26,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,34.248.0.0/13,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,35.152.74.128/29,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,35.152.74.136/30,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,35.152.74.144/28,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,35.152.74.160/28,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,35.152.86.0/23,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,35.152.88.0/24,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,35.157.127.248/29,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,35.158.127.64/26,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,35.158.136.0/24,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,35.160.0.0/13,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,35.168.231.216/29,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,35.170.83.0/25,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,35.170.83.144/28,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,35.170.83.160/27,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,35.170.83.192/26,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,35.171.100.0/28,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,35.171.100.128/26,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,35.171.100.208/28,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,35.171.100.224/27,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,35.171.100.64/26,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,35.172.155.192/27,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,35.172.155.96/27,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,35.176.32.0/24,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,35.176.92.32/29,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,35.177.154.128/26,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,35.177.154.192/29,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,35.179.42.0/23,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,35.180.1.16/28,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,35.180.1.32/27,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,35.180.1.8/29,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,35.180.112.128/26,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,35.180.112.80/29,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,35.181.128.0/24,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,35.182.14.208/28,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,35.182.14.48/29,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,35.183.255.0/24,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,35.183.38.0/26,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,35.183.38.64/29,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,35.183.92.176/29,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,35.72.164.212/30,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,35.72.164.232/29,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,35.72.164.240/28,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,35.72.255.0/24,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,35.72.36.140/30,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,35.72.36.144/29,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,35.72.36.192/26,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,35.72.37.0/24,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,35.73.0.0/22,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,35.73.115.0/28,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,35.73.115.128/25,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,35.73.4.0/24,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,35.73.8.0/22,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,35.74.77.240/30,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,35.75.130.0/24,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,35.75.131.0/26,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,35.75.131.80/29,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,35.77.112.0/22,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,35.77.124.0/23,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,35.80.35.0/24,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,35.80.36.192/27,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,35.80.36.224/28,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,35.80.88.0/21,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,35.82.136.192/29,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,35.83.248.40/29,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,35.84.36.0/30,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,35.90.132.0/23,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,35.92.26.0/24,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,35.93.124.0/22,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,37.77.184.0/21,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,38.72.126.0/24,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,43.218.56.128/25,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,43.218.56.64/26,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,43.218.71.0/26,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,44.192.134.240/28,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,44.192.135.0/24,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,44.192.140.112/28,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,44.192.140.128/29,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,44.192.140.64/28,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,44.192.245.160/28,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,44.192.255.128/28,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,44.194.111.224/30,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,44.206.4.0/22,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,44.209.84.0/22,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,44.210.64.0/22,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,44.212.176.0/21,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,44.214.144.0/20,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,44.224.0.0/16,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,44.227.178.0/24,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,44.230.0.0/16,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,44.233.54.0/23,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,44.234.108.128/25,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,44.234.28.0/22,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,44.234.54.0/23,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,44.234.73.116/30,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,44.234.73.120/30,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,44.234.90.252/30,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,44.242.143.180/31,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,44.242.143.224/30,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,44.242.143.242/31,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,44.242.143.244/30,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,44.242.143.248/29,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,44.242.161.0/28,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,44.242.161.16/31,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,44.242.161.20/30,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,44.242.176.192/26,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,44.242.177.0/25,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,44.242.177.128/27,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,44.242.178.0/23,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,44.242.180.0/24,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,44.242.181.0/27,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,44.242.181.32/28,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,45.57.0.0/17,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,52.0.0.0/15,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,52.10.0.0/15,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,52.12.0.0/15,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,52.15.127.128/26,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,52.15.247.208/29,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,52.19.124.0/23,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,52.199.127.192/26,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,52.212.248.0/26,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,52.215.218.112/28,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,52.215.218.64/28,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,52.22.0.0/16,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,52.220.191.0/26,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,52.221.221.128/29,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,52.23.61.0/24,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,52.23.62.0/24,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,52.24.0.0/14,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,52.32.0.0/14,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,52.40.0.0/14,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,52.46.0.0/22,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,52.46.16.0/20,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,52.46.32.0/19,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,52.46.4.0/23,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,52.47.139.0/24,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,52.47.73.160/27,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,52.47.73.72/29,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,52.48.0.0/14,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,52.5.0.0/16,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,52.52.191.128/26,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,52.54.0.0/16,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,52.55.191.224/27,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,52.56.127.0/25,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,52.57.254.0/24,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,52.59.127.0/24,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,52.61.193.0/24,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,52.61.40.104/29,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,52.66.194.128/26,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,52.7.0.0/16,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,52.72.0.0/16,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,52.76.127.0/24,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,52.78.247.128/26,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,52.82.128.0/23,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,52.82.134.0/23,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,52.88.0.0/15,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,54.0.0.0/16,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,54.148.0.0/15,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,54.153.254.0/24,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,54.175.0.0/16,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,54.182.128.0/20,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,54.182.144.0/21,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,54.182.154.0/23,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,54.182.156.0/22,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,54.182.160.0/21,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,54.182.172.0/22,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,54.182.176.0/21,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,54.182.184.0/22,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,54.182.188.0/23,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,54.182.224.0/21,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,54.182.240.0/21,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,54.182.248.0/22,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,54.183.255.128/26,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,54.186.0.0/15,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,54.188.0.0/15,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,54.190.198.32/28,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,54.204.25.0/28,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,54.213.0.0/16,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,54.214.128.0/17,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,54.228.16.0/26,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,54.232.40.64/26,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,54.233.204.0/24,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,54.233.255.128/26,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,54.239.134.0/23,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,54.239.170.0/23,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,54.239.204.0/22,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,54.239.208.0/21,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,54.241.32.64/26,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,54.243.31.192/26,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,54.244.46.0/23,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,54.244.52.192/26,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,54.245.168.0/26,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,54.248.220.0/26,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,54.250.251.0/24,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,54.250.253.192/26,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,54.251.31.128/26,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,54.252.254.192/26,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,54.252.79.128/26,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,54.255.254.192/26,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,54.68.0.0/15,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,54.74.0.0/15,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,54.76.0.0/15,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,54.85.0.0/16,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,54.86.0.0/16,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,64.120.128.0/17,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,65.0.192.176/28,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,65.0.192.224/27,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,65.0.234.0/26,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,65.1.103.192/29,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,65.1.103.200/30,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,65.1.103.208/28,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,65.1.103.224/28,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,65.1.156.0/22,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,65.1.170.0/23,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,65.1.172.0/22,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,66.133.87.0/24,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,66.197.128.0/17,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,69.53.224.0/19,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,70.232.86.124/31,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,70.232.86.126/32,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,76.223.104.0/24,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,76.223.95.0/24,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,76.223.96.0/21,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,8.41.4.0/24,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,99.77.55.0/30,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,99.77.55.12/30,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,99.77.55.24/30,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,99.77.55.253/32,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,99.77.55.254/31,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,99.78.238.251/32,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,99.78.238.253/32,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,99.78.238.255/32,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,99.79.126.0/24,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,99.79.169.0/24,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,99.79.20.192/26,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,99.80.34.48/28,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,99.80.34.64/26,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR,99.80.88.0/25,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR6,2607:fb10::/32,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR6,2620:10c:7000::/44,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR6,2a00:86c0::/32,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - IP-CIDR6,2a03:5640::/32,📺 流媒体 - NETFLIX/Disney/,no-resolve
+  - PROCESS-NAME,com.netflix.mediaclient,📺 流媒体 - NETFLIX/Disney/
+  - DOMAIN,p-bstarstatic.akamaized.net,🅱️️ 哔哩哔哩港澳台
+  - DOMAIN,p.bstarstatic.com,🅱️️ 哔哩哔哩港澳台
+  - DOMAIN,upos-bstar-mirrorakam.akamaized.net,🅱️️ 哔哩哔哩港澳台
+  - DOMAIN,upos-bstar1-mirrorakam.akamaized.net,🅱️️ 哔哩哔哩港澳台
+  - DOMAIN,upos-hz-mirrorakam.akamaized.net,🅱️️ 哔哩哔哩港澳台
+  - DOMAIN-SUFFIX,acgvideo.com,🅱️️ 哔哩哔哩港澳台
+  - DOMAIN-SUFFIX,bilibili.com,🅱️️ 哔哩哔哩港澳台
+  - DOMAIN-SUFFIX,bilibili.tv,🅱️️ 哔哩哔哩港澳台
+  - IP-CIDR,45.43.32.234/32,🅱️️ 哔哩哔哩港澳台,no-resolve
+  - IP-CIDR,119.29.29.29/32,🅱️️ 哔哩哔哩港澳台,no-resolve
+  - IP-CIDR,128.1.62.200/32,🅱️️ 哔哩哔哩港澳台,no-resolve
+  - IP-CIDR,128.1.62.201/32,🅱️️ 哔哩哔哩港澳台,no-resolve
+  - IP-CIDR,150.116.92.250/32,🅱️️ 哔哩哔哩港澳台,no-resolve
+  - IP-CIDR,164.52.76.18/32,🅱️️ 哔哩哔哩港澳台,no-resolve
+  - IP-CIDR,203.107.1.33/32,🅱️️ 哔哩哔哩港澳台,no-resolve
+  - IP-CIDR,203.107.1.34/32,🅱️️ 哔哩哔哩港澳台,no-resolve
+  - IP-CIDR,203.107.1.65/32,🅱️️ 哔哩哔哩港澳台,no-resolve
+  - DOMAIN,img-prod-cms-rt-microsoft-com.akamaized.net,🎮️ 游戏
+  - DOMAIN,login.live.com,🎮️ 游戏
+  - DOMAIN,logincdn.msauth.net,🎮️ 游戏
+  - DOMAIN,store-images.s-microsoft.com,🎮️ 游戏
+  - DOMAIN-SUFFIX,battle.net,🎮️ 游戏
+  - DOMAIN-SUFFIX,blizzard.com,🎮️ 游戏
+  - DOMAIN-SUFFIX,battlenet.com,🎮️ 游戏
+  - DOMAIN-SUFFIX,battlenet.com.cn,🎮️ 游戏
+  - DOMAIN-SUFFIX,blizzard.cn,🎮️ 游戏
+  - DOMAIN-SUFFIX,blizzard.nefficient.co.kr,🎮️ 游戏
+  - DOMAIN-SUFFIX,blizzardgames.cn,🎮️ 游戏
+  - DOMAIN-SUFFIX,blizzardgearstore.com,🎮️ 游戏
+  - DOMAIN-SUFFIX,blizzcon-a.akamaihd.net,🎮️ 游戏
+  - DOMAIN-SUFFIX,blz-contentstack.com,🎮️ 游戏
+  - DOMAIN-SUFFIX,blz.nosdn.127.net,🎮️ 游戏
+  - DOMAIN-SUFFIX,blzddist1-a.akamaihd.net,🎮️ 游戏
+  - DOMAIN-SUFFIX,blzddistkr1-a.akamaihd.net,🎮️ 游戏
+  - DOMAIN-SUFFIX,blzmedia-a.akamaihd.net,🎮️ 游戏
+  - DOMAIN-SUFFIX,blznav.akamaized.net,🎮️ 游戏
+  - DOMAIN-SUFFIX,blzstatic.cn,🎮️ 游戏
+  - DOMAIN-SUFFIX,bnet.163.com,🎮️ 游戏
+  - DOMAIN-SUFFIX,bnetcmsus-a.akamaihd.net,🎮️ 游戏
+  - DOMAIN-SUFFIX,bnetproduct-a.akamaihd.net,🎮️ 游戏
+  - DOMAIN-SUFFIX,bnetshopus.akamaized.net,🎮️ 游戏
+  - DOMAIN-SUFFIX,cdp.cloud.unity3d.com,🎮️ 游戏
+  - DOMAIN-SUFFIX,di.res.netease.com,🎮️ 游戏
+  - DOMAIN-SUFFIX,diablo3.com,🎮️ 游戏
+  - DOMAIN-SUFFIX,diablo3.nosdn.127.net,🎮️ 游戏
+  - DOMAIN-SUFFIX,diabloimmortal.com,🎮️ 游戏
+  - DOMAIN-SUFFIX,firesidegatherings.com,🎮️ 游戏
+  - DOMAIN-SUFFIX,hearthstone.nosdn.127.net,🎮️ 游戏
+  - DOMAIN-SUFFIX,heroes.nos.netease.com,🎮️ 游戏
+  - DOMAIN-SUFFIX,heroesofthestorm.com,🎮️ 游戏
+  - DOMAIN-SUFFIX,overwatch.nosdn.127.net,🎮️ 游戏
+  - DOMAIN-SUFFIX,playhearthstone.com,🎮️ 游戏
+  - DOMAIN-SUFFIX,playoverwatch.com,🎮️ 游戏
+  - DOMAIN-SUFFIX,playwarcraft3.com,🎮️ 游戏
+  - DOMAIN-SUFFIX,sc2.nosdn.127.net,🎮️ 游戏
+  - DOMAIN-SUFFIX,starcraft.com,🎮️ 游戏
+  - DOMAIN-SUFFIX,starcraft2.com,🎮️ 游戏
+  - DOMAIN-SUFFIX,worldofwarcraft.com,🎮️ 游戏
+  - DOMAIN-SUFFIX,wow.nosdn.127.net,🎮️ 游戏
+  - DOMAIN-SUFFIX,wowchina.com,🎮️ 游戏
+  - DOMAIN-SUFFIX,anthemgame.com,🎮️ 游戏
+  - DOMAIN-SUFFIX,anthemthegame.com,🎮️ 游戏
+  - DOMAIN-SUFFIX,apexlegends.com,🎮️ 游戏
+  - DOMAIN-SUFFIX,awayoutgame.com,🎮️ 游戏
+  - DOMAIN-SUFFIX,battlefield.com,🎮️ 游戏
+  - DOMAIN-SUFFIX,battlefield1943.com,🎮️ 游戏
+  - DOMAIN-SUFFIX,battlefield3.com,🎮️ 游戏
+  - DOMAIN-SUFFIX,battlefield4.com,🎮️ 游戏
+  - DOMAIN-SUFFIX,battlefield5.com,🎮️ 游戏
+  - DOMAIN-SUFFIX,battlefieldbadcompany2.com,🎮️ 游戏
+  - DOMAIN-SUFFIX,battlefieldheroes.com,🎮️ 游戏
+  - DOMAIN-SUFFIX,battlefieldv.com,🎮️ 游戏
+  - DOMAIN-SUFFIX,battlefront2.com,🎮️ 游戏
+  - DOMAIN-SUFFIX,battlefrontii.com,🎮️ 游戏
+  - DOMAIN-SUFFIX,battlelog.com,🎮️ 游戏
+  - DOMAIN-SUFFIX,bejeweledstars.com,🎮️ 游戏
+  - DOMAIN-SUFFIX,bejewled-stars.com,🎮️ 游戏
+  - DOMAIN-SUFFIX,bioware.com,🎮️ 游戏
+  - DOMAIN-SUFFIX,biowarestore.com,🎮️ 游戏
+  - DOMAIN-SUFFIX,blackboxgames.com,🎮️ 游戏
+  - DOMAIN-SUFFIX,camelot-europe.com,🎮️ 游戏
+  - DOMAIN-SUFFIX,camelotherald.com,🎮️ 游戏
+  - DOMAIN-SUFFIX,camelotherald.net,🎮️ 游戏
+  - DOMAIN-SUFFIX,capitalgames.com,🎮️ 游戏
+  - DOMAIN-SUFFIX,chillingo.com,🎮️ 游戏
+  - DOMAIN-SUFFIX,cloudsync-prod.s3.amazonaws.com,🎮️ 游戏
+  - DOMAIN-SUFFIX,cncrivals.com,🎮️ 游戏
+  - DOMAIN-SUFFIX,commandandconquer.com,🎮️ 游戏
+  - DOMAIN-SUFFIX,conquerwithcharacter.com,🎮️ 游戏
+  - DOMAIN-SUFFIX,crysis.jp,🎮️ 游戏
+  - DOMAIN-SUFFIX,daoc.net,🎮️ 游戏
+  - DOMAIN-SUFFIX,darkageofcamelot.com,🎮️ 游戏
+  - DOMAIN-SUFFIX,darkness-risen.com,🎮️ 游戏
+  - DOMAIN-SUFFIX,dawngate.com,🎮️ 游戏
+  - DOMAIN-SUFFIX,dawngatechronicles.com,🎮️ 游戏
+  - DOMAIN-SUFFIX,deadspacegame.com,🎮️ 游戏
+  - DOMAIN-SUFFIX,dice.se,🎮️ 游戏
+  - DOMAIN-SUFFIX,dicela.com,🎮️ 游戏
+  - DOMAIN-SUFFIX,dicela.net,🎮️ 游戏
+  - DOMAIN-SUFFIX,dragonage.com,🎮️ 游戏
+  - DOMAIN-SUFFIX,dragonagekeep.com,🎮️ 游戏
+  - DOMAIN-SUFFIX,dragonagemovie.com,🎮️ 游戏
+  - DOMAIN-SUFFIX,dungeonkeeper.cn,🎮️ 游戏
+  - DOMAIN-SUFFIX,dungeonkeeper.com,🎮️ 游戏
+  - DOMAIN-SUFFIX,dungeonkeeper.com.cn,🎮️ 游戏
+  - DOMAIN-SUFFIX,ea-anz-press.com,🎮️ 游戏
+  - DOMAIN-SUFFIX,ea.com,🎮️ 游戏
+  - DOMAIN-SUFFIX,ea.tt.omtrdc.net,🎮️ 游戏
+  - DOMAIN-SUFFIX,eaaccess.com,🎮️ 游戏
+  - DOMAIN-SUFFIX,eaassets-a.akamaihd.net,🎮️ 游戏
+  - DOMAIN-SUFFIX,eablackbox.com,🎮️ 游戏
+  - DOMAIN-SUFFIX,eacashcard.com,🎮️ 游戏
+  - DOMAIN-SUFFIX,eacodigos.com,🎮️ 游戏
+  - DOMAIN-SUFFIX,eafootballworld.com,🎮️ 游戏
+  - DOMAIN-SUFFIX,eakorea.co.kr,🎮️ 游戏
+  - DOMAIN-SUFFIX,eamirrorsedge.com,🎮️ 游戏
+  - DOMAIN-SUFFIX,eamobile.com,🎮️ 游戏
+  - DOMAIN-SUFFIX,eamythic.com,🎮️ 游戏
+  - DOMAIN-SUFFIX,eamythic.net,🎮️ 游戏
+  - DOMAIN-SUFFIX,eanordic.com,🎮️ 游戏
+  - DOMAIN-SUFFIX,eaplay.com,🎮️ 游戏
+  - DOMAIN-SUFFIX,easports.com,🎮️ 游戏
+  - DOMAIN-SUFFIX,easports.jp,🎮️ 游戏
+  - DOMAIN-SUFFIX,easportsactive.com,🎮️ 游戏
+  - DOMAIN-SUFFIX,easportsactiveonline.com,🎮️ 游戏
+  - DOMAIN-SUFFIX,easportsfootball.com,🎮️ 游戏
+  - DOMAIN-SUFFIX,easportsfootballclub.com,🎮️ 游戏
+  - DOMAIN-SUFFIX,easportsmma.com,🎮️ 游戏
+  - DOMAIN-SUFFIX,easportsworld.com,🎮️ 游戏
+  - DOMAIN-SUFFIX,eastore.com,🎮️ 游戏
+  - DOMAIN-SUFFIX,electronicarts.com,🎮️ 游戏
+  - DOMAIN-SUFFIX,electronicarts.fr,🎮️ 游戏
+  - DOMAIN-SUFFIX,fifastreet.com,🎮️ 游戏
+  - DOMAIN-SUFFIX,fifastreet3.com,🎮️ 游戏
+  - DOMAIN-SUFFIX,frostbite.com,🎮️ 游戏
+  - DOMAIN-SUFFIX,futpromos.com,🎮️ 游戏
+  - DOMAIN-SUFFIX,futunited.com,🎮️ 游戏
+  - DOMAIN-SUFFIX,ghostgames.com,🎮️ 游戏
+  - DOMAIN-SUFFIX,heroesofdragonage.com,🎮️ 游戏
+  - DOMAIN-SUFFIX,hutpromos.com,🎮️ 游戏
+  - DOMAIN-SUFFIX,industrialtoys.com,🎮️ 游戏
+  - DOMAIN-SUFFIX,lordofultima.com,🎮️ 游戏
+  - DOMAIN-SUFFIX,maddenchampionship.com,🎮️ 游戏
+  - DOMAIN-SUFFIX,maddenrewards.com,🎮️ 游戏
+  - DOMAIN-SUFFIX,maddenseason.info,🎮️ 游戏
+  - DOMAIN-SUFFIX,maddenseason.net,🎮️ 游戏
+  - DOMAIN-SUFFIX,maddenseason.org,🎮️ 游戏
+  - DOMAIN-SUFFIX,masseffect.com,🎮️ 游戏
+  - DOMAIN-SUFFIX,masseffectarchives.com,🎮️ 游戏
+  - DOMAIN-SUFFIX,maxis.com,🎮️ 游戏
+  - DOMAIN-SUFFIX,mirrorsedge.com,🎮️ 游戏
+  - DOMAIN-SUFFIX,mirrorsedge.jp,🎮️ 游戏
+  - DOMAIN-SUFFIX,mirrorsedge.net,🎮️ 游戏
+  - DOMAIN-SUFFIX,mirrorsedge2.com,🎮️ 游戏
+  - DOMAIN-SUFFIX,mirrorsedge2d.com,🎮️ 游戏
+  - DOMAIN-SUFFIX,mysims.com,🎮️ 游戏
+  - DOMAIN-SUFFIX,mysimsracing.com,🎮️ 游戏
+  - DOMAIN-SUFFIX,mythicentertainment.com,🎮️ 游戏
+  - DOMAIN-SUFFIX,mythicentertainment.net,🎮️ 游戏
+  - DOMAIN-SUFFIX,mythicgames.com,🎮️ 游戏
+  - DOMAIN-SUFFIX,needforspeed.com,🎮️ 游戏
+  - DOMAIN-SUFFIX,needforspeedboost.com,🎮️ 游戏
+  - DOMAIN-SUFFIX,needforspeeddriftkings.com,🎮️ 游戏
+  - DOMAIN-SUFFIX,needforspeedeliminator.com,🎮️ 游戏
+  - DOMAIN-SUFFIX,needforspeedlightning.com,🎮️ 游戏
+  - DOMAIN-SUFFIX,needforspeedoverdrive.com,🎮️ 游戏
+  - DOMAIN-SUFFIX,needforspeedproven.com,🎮️ 游戏
+  - DOMAIN-SUFFIX,needforspeedredline.com,🎮️ 游戏
+  - DOMAIN-SUFFIX,needforspeedshowdown.com,🎮️ 游戏
+  - DOMAIN-SUFFIX,needforspeedstreetkings.com,🎮️ 游戏
+  - DOMAIN-SUFFIX,needforspeedtakedown.com,🎮️ 游戏
+  - DOMAIN-SUFFIX,needforspeedtherun.com,🎮️ 游戏
+  - DOMAIN-SUFFIX,needforspeedtimeattack.com,🎮️ 游戏
+  - DOMAIN-SUFFIX,needforspeedundergroundeast.com,🎮️ 游戏
+  - DOMAIN-SUFFIX,nfsworld.com,🎮️ 游戏
+  - DOMAIN-SUFFIX,origin-a.akamaihd.net,🎮️ 游戏
+  - DOMAIN-SUFFIX,origin.com,🎮️ 游戏
+  - DOMAIN-SUFFIX,origin.tv,🎮️ 游戏
+  - DOMAIN-SUFFIX,plantsvszombies2.com,🎮️ 游戏
+  - DOMAIN-SUFFIX,play4free.com,🎮️ 游戏
+  - DOMAIN-SUFFIX,playapex.com,🎮️ 游戏
+  - DOMAIN-SUFFIX,pogo.com,🎮️ 游戏
+  - DOMAIN-SUFFIX,pogobeta.com,🎮️ 游戏
+  - DOMAIN-SUFFIX,popcap.com,🎮️ 游戏
+  - DOMAIN-SUFFIX,projectapex.com,🎮️ 游戏
+  - DOMAIN-SUFFIX,pvzgw2.com,🎮️ 游戏
+  - DOMAIN-SUFFIX,pvzheroes.com,🎮️ 游戏
+  - DOMAIN-SUFFIX,seaofsolitude.com,🎮️ 游戏
+  - DOMAIN-SUFFIX,simcity-buildit.com,🎮️ 游戏
+  - DOMAIN-SUFFIX,simcity.com,🎮️ 游戏
+  - DOMAIN-SUFFIX,skate2.com,🎮️ 游戏
+  - DOMAIN-SUFFIX,spearhead.kr,🎮️ 游戏
+  - DOMAIN-SUFFIX,speedhunters.com,🎮️ 游戏
+  - DOMAIN-SUFFIX,spore.com,🎮️ 游戏
+  - DOMAIN-SUFFIX,ssx3.com,🎮️ 游戏
+  - DOMAIN-SUFFIX,starwarsbattlefront.com,🎮️ 游戏
+  - DOMAIN-SUFFIX,starwarsbattlefront2.com,🎮️ 游戏
+  - DOMAIN-SUFFIX,starwarsfallenorder.com,🎮️ 游戏
+  - DOMAIN-SUFFIX,starwarsjedifallenorder.com,🎮️ 游戏
+  - DOMAIN-SUFFIX,starwarstheoldrepublic.com,🎮️ 游戏
+  - DOMAIN-SUFFIX,swjedifallenorder.com,🎮️ 游戏
+  - DOMAIN-SUFFIX,swjfo.com,🎮️ 游戏
+  - DOMAIN-SUFFIX,swtor.com,🎮️ 游戏
+  - DOMAIN-SUFFIX,swtor.net,🎮️ 游戏
+  - DOMAIN-SUFFIX,teamneedforspeed.com,🎮️ 游戏
+  - DOMAIN-SUFFIX,thedreadwolfrises.com,🎮️ 游戏
+  - DOMAIN-SUFFIX,thesims.com,🎮️ 游戏
+  - DOMAIN-SUFFIX,thesims3.com,🎮️ 游戏
+  - DOMAIN-SUFFIX,thesims4.com,🎮️ 游戏
+  - DOMAIN-SUFFIX,thesimssocial.com,🎮️ 游戏
+  - DOMAIN-SUFFIX,tiberiumalliances.com,🎮️ 游戏
+  - DOMAIN-SUFFIX,tiburon.com,🎮️ 游戏
+  - DOMAIN-SUFFIX,titanfall.com,🎮️ 游戏
+  - DOMAIN-SUFFIX,tnt-ea.com,🎮️ 游戏
+  - DOMAIN-SUFFIX,ultimaforever.com,🎮️ 游戏
+  - DOMAIN-SUFFIX,ultimaonline.com,🎮️ 游戏
+  - DOMAIN-SUFFIX,unravel2.com,🎮️ 游戏
+  - DOMAIN-SUFFIX,unraveltwo.com,🎮️ 游戏
+  - DOMAIN-SUFFIX,uo.com,🎮️ 游戏
+  - DOMAIN-SUFFIX,uoherald.com,🎮️ 游戏
+  - DOMAIN-SUFFIX,visceralgames.com,🎮️ 游戏
+  - DOMAIN-SUFFIX,xdsummit.com,🎮️ 游戏
+  - DOMAIN-SUFFIX,yogify.com,🎮️ 游戏
+  - DOMAIN-SUFFIX,battlebreakers.com,🎮️ 游戏
+  - DOMAIN-SUFFIX,eac-cdn.com,🎮️ 游戏
+  - DOMAIN-SUFFIX,easy.ac,🎮️ 游戏
+  - DOMAIN-SUFFIX,easyanticheat.net,🎮️ 游戏
+  - DOMAIN-SUFFIX,epicgames.com,🎮️ 游戏
+  - DOMAIN-SUFFIX,epicgames.dev,🎮️ 游戏
+  - DOMAIN-SUFFIX,fortnite.com,🎮️ 游戏
+  - DOMAIN-SUFFIX,helpshift.com,🎮️ 游戏
+  - DOMAIN-SUFFIX,paragon.com,🎮️ 游戏
+  - DOMAIN-SUFFIX,playparagon.com,🎮️ 游戏
+  - DOMAIN-SUFFIX,roborecall.com,🎮️ 游戏
+  - DOMAIN-SUFFIX,shadowcomplex.com,🎮️ 游戏
+  - DOMAIN-SUFFIX,spyjinx.com,🎮️ 游戏
+  - DOMAIN-SUFFIX,unrealengine.com,🎮️ 游戏
+  - DOMAIN-SUFFIX,unrealtournament.com,🎮️ 游戏
+  - DOMAIN-SUFFIX,sony.com,🎮️ 游戏
+  - DOMAIN-SUFFIX,avatargarenanow-a.akamaihd.net,🎮️ 游戏
+  - DOMAIN-SUFFIX,cdngarenanow-a.akamaihd.net,🎮️ 游戏
+  - DOMAIN-SUFFIX,dlmobilegarena-a.akamaihd.net,🎮️ 游戏
+  - DOMAIN-SUFFIX,garena.co.id,🎮️ 游戏
+  - DOMAIN-SUFFIX,garena.co.th,🎮️ 游戏
+  - DOMAIN-SUFFIX,garena.com,🎮️ 游戏
+  - DOMAIN-SUFFIX,garena.live,🎮️ 游戏
+  - DOMAIN-SUFFIX,garena.my,🎮️ 游戏
+  - DOMAIN-SUFFIX,garena.ph,🎮️ 游戏
+  - DOMAIN-SUFFIX,garena.sg,🎮️ 游戏
+  - DOMAIN-SUFFIX,garena.tv,🎮️ 游戏
+  - DOMAIN-SUFFIX,garena.tw,🎮️ 游戏
+  - DOMAIN-SUFFIX,garena.vn,🎮️ 游戏
+  - DOMAIN-SUFFIX,garenanow.com,🎮️ 游戏
+  - DOMAIN-SUFFIX,seagroup.com,🎮️ 游戏
+  - DOMAIN-SUFFIX,gog-statics.com,🎮️ 游戏
+  - DOMAIN-SUFFIX,gog.com,🎮️ 游戏
+  - DOMAIN-SUFFIX,gog.qtlglb.com,🎮️ 游戏
+  - DOMAIN-SUFFIX,100classicbooks.com,🎮️ 游戏
+  - DOMAIN-SUFFIX,ac-pocketcamp.com,🎮️ 游戏
+  - DOMAIN-SUFFIX,amiibo.com,🎮️ 游戏
+  - DOMAIN-SUFFIX,ayudanintendo.com,🎮️ 游戏
+  - DOMAIN-SUFFIX,bowsersinsidestory.com,🎮️ 游戏
+  - DOMAIN-SUFFIX,dialga.com,🎮️ 游戏
+  - DOMAIN-SUFFIX,diddykongracing.com,🎮️ 游戏
+  - DOMAIN-SUFFIX,dkr.com,🎮️ 游戏
+  - DOMAIN-SUFFIX,donkeykongcountryreturns.com,🎮️ 游戏
+  - DOMAIN-SUFFIX,drmario-world.com,🎮️ 游戏
+  - DOMAIN-SUFFIX,excitebots.com,🎮️ 游戏
+  - DOMAIN-SUFFIX,fire-emblem-heroes.com,🎮️ 游戏
+  - DOMAIN-SUFFIX,fireemblemawakening.com,🎮️ 游戏
+  - DOMAIN-SUFFIX,flipnotestudio.com,🎮️ 游戏
+  - DOMAIN-SUFFIX,giratina.com,🎮️ 游戏
+  - DOMAIN-SUFFIX,gloryofheracles.com,🎮️ 游戏
+  - DOMAIN-SUFFIX,hackyourconsole.com,🎮️ 游戏
+  - DOMAIN-SUFFIX,kirbysepicyarn.com,🎮️ 游戏
+  - DOMAIN-SUFFIX,kirbysuperstarultra.com,🎮️ 游戏
+  - DOMAIN-SUFFIX,kyurem.com,🎮️ 游戏
+  - DOMAIN-SUFFIX,legendofzelda.cn,🎮️ 游戏
+  - DOMAIN-SUFFIX,legendofzelda.com.cn,🎮️ 游戏
+  - DOMAIN-SUFFIX,marioandluigidreamteam.com,🎮️ 游戏
+  - DOMAIN-SUFFIX,mariobroswii.com,🎮️ 游戏
+  - DOMAIN-SUFFIX,mariokart.cn,🎮️ 游戏
+  - DOMAIN-SUFFIX,mariokart.com.cn,🎮️ 游戏
+  - DOMAIN-SUFFIX,mariokart7.com,🎮️ 游戏
+  - DOMAIN-SUFFIX,mariokart8.com,🎮️ 游戏
+  - DOMAIN-SUFFIX,mariosupersluggers.com,🎮️ 游戏
+  - DOMAIN-SUFFIX,miitomo.com,🎮️ 游戏
+  - DOMAIN-SUFFIX,miitomo.com.cn,🎮️ 游戏
+  - DOMAIN-SUFFIX,miiverse.com,🎮️ 游戏
+  - DOMAIN-SUFFIX,nentindo.net,🎮️ 游戏
+  - DOMAIN-SUFFIX,newsupermariobrosu.com,🎮️ 游戏
+  - DOMAIN-SUFFIX,nintendo-europe-sales.com,🎮️ 游戏
+  - DOMAIN-SUFFIX,nintendo-europe.com,🎮️ 游戏
+  - DOMAIN-SUFFIX,nintendo.at,🎮️ 游戏
+  - DOMAIN-SUFFIX,nintendo.be,🎮️ 游戏
+  - DOMAIN-SUFFIX,nintendo.ch,🎮️ 游戏
+  - DOMAIN-SUFFIX,nintendo.co.jp,🎮️ 游戏
+  - DOMAIN-SUFFIX,nintendo.co.kr,🎮️ 游戏
+  - DOMAIN-SUFFIX,nintendo.co.uk,🎮️ 游戏
+  - DOMAIN-SUFFIX,nintendo.co.za,🎮️ 游戏
+  - DOMAIN-SUFFIX,nintendo.com,🎮️ 游戏
+  - DOMAIN-SUFFIX,nintendo.com.au,🎮️ 游戏
+  - DOMAIN-SUFFIX,nintendo.com.hk,🎮️ 游戏
+  - DOMAIN-SUFFIX,nintendo.com.pt,🎮️ 游戏
+  - DOMAIN-SUFFIX,nintendo.de,🎮️ 游戏
+  - DOMAIN-SUFFIX,nintendo.dk,🎮️ 游戏
+  - DOMAIN-SUFFIX,nintendo.es,🎮️ 游戏
+  - DOMAIN-SUFFIX,nintendo.eu,🎮️ 游戏
+  - DOMAIN-SUFFIX,nintendo.fi,🎮️ 游戏
+  - DOMAIN-SUFFIX,nintendo.fr,🎮️ 游戏
+  - DOMAIN-SUFFIX,nintendo.it,🎮️ 游戏
+  - DOMAIN-SUFFIX,nintendo.jp,🎮️ 游戏
+  - DOMAIN-SUFFIX,nintendo.net,🎮️ 游戏
+  - DOMAIN-SUFFIX,nintendo.nl,🎮️ 游戏
+  - DOMAIN-SUFFIX,nintendo.no,🎮️ 游戏
+  - DOMAIN-SUFFIX,nintendo.pt,🎮️ 游戏
+  - DOMAIN-SUFFIX,nintendo.ru,🎮️ 游戏
+  - DOMAIN-SUFFIX,nintendo.se,🎮️ 游戏
+  - DOMAIN-SUFFIX,nintendo.tw,🎮️ 游戏
+  - DOMAIN-SUFFIX,nintendo3ds.com,🎮️ 游戏
+  - DOMAIN-SUFFIX,nintendodsi.com,🎮️ 游戏
+  - DOMAIN-SUFFIX,nintendoeurope.com,🎮️ 游戏
+  - DOMAIN-SUFFIX,nintendolabo.cn,🎮️ 游戏
+  - DOMAIN-SUFFIX,nintendonetwork.net,🎮️ 游戏
+  - DOMAIN-SUFFIX,nintendonyc.com,🎮️ 游戏
+  - DOMAIN-SUFFIX,nintendostore.com,🎮️ 游戏
+  - DOMAIN-SUFFIX,nintendoswitch.cn,🎮️ 游戏
+  - DOMAIN-SUFFIX,nintendoswitch.com,🎮️ 游戏
+  - DOMAIN-SUFFIX,nintendoswitch.com.cn,🎮️ 游戏
+  - DOMAIN-SUFFIX,nintendoswitch.net,🎮️ 游戏
+  - DOMAIN-SUFFIX,nintendoswitchtogether.com,🎮️ 游戏
+  - DOMAIN-SUFFIX,nintendowifi.net,🎮️ 游戏
+  - DOMAIN-SUFFIX,nintendowii.com,🎮️ 游戏
+  - DOMAIN-SUFFIX,personaltrainermath.com,🎮️ 游戏
+  - DOMAIN-SUFFIX,playnintendo.com,🎮️ 游戏
+  - DOMAIN-SUFFIX,pokedex3d.com,🎮️ 游戏
+  - DOMAIN-SUFFIX,pokemon-moon.com,🎮️ 游戏
+  - DOMAIN-SUFFIX,pokemon-sun.com,🎮️ 游戏
+  - DOMAIN-SUFFIX,pokemon-sunmoon.com,🎮️ 游戏
+  - DOMAIN-SUFFIX,pokemon.com,🎮️ 游戏
+  - DOMAIN-SUFFIX,pokemonbank.com,🎮️ 游戏
+  - DOMAIN-SUFFIX,pokemonblackwhite.com,🎮️ 游戏
+  - DOMAIN-SUFFIX,pokemonbw.com,🎮️ 游戏
+  - DOMAIN-SUFFIX,pokemonchampionships.com,🎮️ 游戏
+  - DOMAIN-SUFFIX,pokemongoldsilver.com,🎮️ 游戏
+  - DOMAIN-SUFFIX,pokemonhome.com,🎮️ 游戏
+  - DOMAIN-SUFFIX,pokemonletsgoeevee.com,🎮️ 游戏
+  - DOMAIN-SUFFIX,pokemonletsgopikachu.com,🎮️ 游戏
+  - DOMAIN-SUFFIX,pokemonmysterydungeon.com,🎮️ 游戏
+  - DOMAIN-SUFFIX,pokemonpicross.com,🎮️ 游戏
+  - DOMAIN-SUFFIX,pokemonplatinum.com,🎮️ 游戏
+  - DOMAIN-SUFFIX,pokemonrubysapphire.com,🎮️ 游戏
+  - DOMAIN-SUFFIX,pokemonsunmoon.com,🎮️ 游戏
+  - DOMAIN-SUFFIX,pokemonswordshield.com,🎮️ 游戏
+  - DOMAIN-SUFFIX,pokemonultrasunmoon.com,🎮️ 游戏
+  - DOMAIN-SUFFIX,pokemonvgc.com,🎮️ 游戏
+  - DOMAIN-SUFFIX,pokemonwifi.net,🎮️ 游戏
+  - DOMAIN-SUFFIX,splatoon2tournament.com,🎮️ 游戏
+  - DOMAIN-SUFFIX,starfox.com,🎮️ 游戏
+  - DOMAIN-SUFFIX,supermario.com,🎮️ 游戏
+  - DOMAIN-SUFFIX,supermario3dworld.com,🎮️ 游戏
+  - DOMAIN-SUFFIX,supermariobros.com.cn,🎮️ 游戏
+  - DOMAIN-SUFFIX,supermariogalaxy.com,🎮️ 游戏
+  - DOMAIN-SUFFIX,supermariorun.com,🎮️ 游戏
+  - DOMAIN-SUFFIX,superpapermario.com,🎮️ 游戏
+  - DOMAIN-SUFFIX,supersmashbros.cn,🎮️ 游戏
+  - DOMAIN-SUFFIX,supersmashbros.com.cn,🎮️ 游戏
+  - DOMAIN-SUFFIX,thelegendarystarfy.com,🎮️ 游戏
+  - DOMAIN-SUFFIX,thewonderful101.com,🎮️ 游戏
+  - DOMAIN-SUFFIX,wariolandshakeit.com,🎮️ 游戏
+  - DOMAIN-SUFFIX,wariowarediy.com,🎮️ 游戏
+  - DOMAIN-SUFFIX,wii-u.com,🎮️ 游戏
+  - DOMAIN-SUFFIX,wiifit.com,🎮️ 游戏
+  - DOMAIN-SUFFIX,wiifitu.com,🎮️ 游戏
+  - DOMAIN-SUFFIX,wiipartyu.com,🎮️ 游戏
+  - DOMAIN-SUFFIX,wiisports.com,🎮️ 游戏
+  - DOMAIN-SUFFIX,wiisportsresort.com,🎮️ 游戏
+  - DOMAIN-SUFFIX,wiiugamepad.com,🎮️ 游戏
+  - DOMAIN-SUFFIX,wiivc.net,🎮️ 游戏
+  - DOMAIN-SUFFIX,xenoblade.com,🎮️ 游戏
+  - DOMAIN-SUFFIX,xn--mts47c3w9b1qr.cn,🎮️ 游戏
+  - DOMAIN-SUFFIX,xn--mts47c3w9b1qr.net,🎮️ 游戏
+  - DOMAIN-SUFFIX,yoshisnewisland.com,🎮️ 游戏
+  - DOMAIN-SUFFIX,op.gg,🎮️ 游戏
+  - DOMAIN-SUFFIX,opgg-static.akamaized.net,🎮️ 游戏
+  - DOMAIN-SUFFIX,playstation.com,🎮️ 游戏
+  - DOMAIN-SUFFIX,playstation.net,🎮️ 游戏
+  - DOMAIN-SUFFIX,playstationnetwork.com,🎮️ 游戏
+  - DOMAIN-SUFFIX,sonyentertainmentnetwork.com,🎮️ 游戏
+  - DOMAIN-SUFFIX,api-priconne-redive.cygames.jp,🎮️ 游戏
+  - DOMAIN-SUFFIX,omotenashi.cygames.jp,🎮️ 游戏
+  - DOMAIN-SUFFIX,prd-priconne-redive.akamaized.net,🎮️ 游戏
+  - DOMAIN-SUFFIX,championshipseriesleague.com,🎮️ 游戏
+  - DOMAIN-SUFFIX,convrgencegame.com,🎮️ 游戏
+  - DOMAIN-SUFFIX,historyofdota.com,🎮️ 游戏
+  - DOMAIN-SUFFIX,historyofdota.net,🎮️ 游戏
+  - DOMAIN-SUFFIX,historyofdota.org,🎮️ 游戏
+  - DOMAIN-SUFFIX,instituteofwar.org,🎮️ 游戏
+  - DOMAIN-SUFFIX,lcsmerch.com,🎮️ 游戏
+  - DOMAIN-SUFFIX,leaguehighschool.com,🎮️ 游戏
+  - DOMAIN-SUFFIX,leagueoflegends.ca,🎮️ 游戏
+  - DOMAIN-SUFFIX,leagueoflegends.cn,🎮️ 游戏
+  - DOMAIN-SUFFIX,leagueoflegends.co.kr,🎮️ 游戏
+  - DOMAIN-SUFFIX,leagueoflegends.com,🎮️ 游戏
+  - DOMAIN-SUFFIX,leagueoflegends.info,🎮️ 游戏
+  - DOMAIN-SUFFIX,leagueoflegends.kr,🎮️ 游戏
+  - DOMAIN-SUFFIX,leagueoflegends.net,🎮️ 游戏
+  - DOMAIN-SUFFIX,leagueoflegends.org,🎮️ 游戏
+  - DOMAIN-SUFFIX,leagueoflegendsscripts.com,🎮️ 游戏
+  - DOMAIN-SUFFIX,leaguesharp.info,🎮️ 游戏
+  - DOMAIN-SUFFIX,leaguoflegends.com,🎮️ 游戏
+  - DOMAIN-SUFFIX,learnwithleague.com,🎮️ 游戏
+  - DOMAIN-SUFFIX,lol-europe.com,🎮️ 游戏
+  - DOMAIN-SUFFIX,lolclub.org,🎮️ 游戏
+  - DOMAIN-SUFFIX,lolespor.com,🎮️ 游戏
+  - DOMAIN-SUFFIX,lolesports.com,🎮️ 游戏
+  - DOMAIN-SUFFIX,lolfanart.net,🎮️ 游戏
+  - DOMAIN-SUFFIX,lolpcs.com,🎮️ 游戏
+  - DOMAIN-SUFFIX,lolshop.co.kr,🎮️ 游戏
+  - DOMAIN-SUFFIX,lolstatic-a.akamaihd.net,🎮️ 游戏
+  - DOMAIN-SUFFIX,lolstatic.com,🎮️ 游戏
+  - DOMAIN-SUFFIX,lolusercontent.com,🎮️ 游戏
+  - DOMAIN-SUFFIX,lpl.com.cn,🎮️ 游戏
+  - DOMAIN-SUFFIX,molesports.com,🎮️ 游戏
+  - DOMAIN-SUFFIX,playvalorant.com,🎮️ 游戏
+  - DOMAIN-SUFFIX,pvp.net,🎮️ 游戏
+  - DOMAIN-SUFFIX,pvp.tv,🎮️ 游戏
+  - DOMAIN-SUFFIX,rgpub.io,🎮️ 游戏
+  - DOMAIN-SUFFIX,riot-games.com,🎮️ 游戏
+  - DOMAIN-SUFFIX,riot.com,🎮️ 游戏
+  - DOMAIN-SUFFIX,riot.net,🎮️ 游戏
+  - DOMAIN-SUFFIX,riotcdn.net,🎮️ 游戏
+  - DOMAIN-SUFFIX,riotforgegames.com,🎮️ 游戏
+  - DOMAIN-SUFFIX,riotgames.co.kr,🎮️ 游戏
+  - DOMAIN-SUFFIX,riotgames.com,🎮️ 游戏
+  - DOMAIN-SUFFIX,riotgames.info,🎮️ 游戏
+  - DOMAIN-SUFFIX,riotgames.jp,🎮️ 游戏
+  - DOMAIN-SUFFIX,riotgames.net,🎮️ 游戏
+  - DOMAIN-SUFFIX,riotgames.tv,🎮️ 游戏
+  - DOMAIN-SUFFIX,riotpin.com,🎮️ 游戏
+  - DOMAIN-SUFFIX,riotpoints.com,🎮️ 游戏
+  - DOMAIN-SUFFIX,rstatic.net,🎮️ 游戏
+  - DOMAIN-SUFFIX,ruinedking.com,🎮️ 游戏
+  - DOMAIN-SUFFIX,supremacy.com,🎮️ 游戏
+  - DOMAIN-SUFFIX,supremacy.net,🎮️ 游戏
+  - DOMAIN-SUFFIX,ulol.com,🎮️ 游戏
+  - DOMAIN-SUFFIX,gamedownloads-rockstargames-com.akamaized.net,🎮️ 游戏
+  - DOMAIN-SUFFIX,media-rockstargames-com.akamaized.net,🎮️ 游戏
+  - DOMAIN-SUFFIX,rockstargames.com,🎮️ 游戏
+  - DOMAIN-SUFFIX,rsg.sc,🎮️ 游戏
+  - DOMAIN-SUFFIX,videos-rockstargames-com.akamaized.net,🎮️ 游戏
+  - DOMAIN-SUFFIX,csgo.wmsj.cn,🎮️ 游戏
+  - DOMAIN-SUFFIX,dl.steam.clngaa.com,🎮️ 游戏
+  - DOMAIN-SUFFIX,dl.steam.ksyna.com,🎮️ 游戏
+  - DOMAIN-SUFFIX,dota2.wmsj.cn,🎮️ 游戏
+  - DOMAIN-SUFFIX,fanatical.com,🎮️ 游戏
+  - DOMAIN-SUFFIX,humblebundle.com,🎮️ 游戏
+  - DOMAIN-SUFFIX,playartifact.com,🎮️ 游戏
+  - DOMAIN-SUFFIX,s.team,🎮️ 游戏
+  - DOMAIN-SUFFIX,st.dl.bscstorage.net,🎮️ 游戏
+  - DOMAIN-SUFFIX,st.dl.eccdnx.com,🎮️ 游戏
+  - DOMAIN-SUFFIX,st.dl.pinyuncloud.com,🎮️ 游戏
+  - DOMAIN-SUFFIX,steam-api.com,🎮️ 游戏
+  - DOMAIN-SUFFIX,steam-chat.com,🎮️ 游戏
+  - DOMAIN-SUFFIX,steambroadcast.akamaized.net,🎮️ 游戏
+  - DOMAIN-SUFFIX,steamcdn-a.akamaihd.net,🎮️ 游戏
+  - DOMAIN-SUFFIX,steamcommunity-a.akamaihd.net,🎮️ 游戏
+  - DOMAIN-SUFFIX,steamcommunity.com,🎮️ 游戏
+  - DOMAIN-SUFFIX,steamcontent.tnkjmec.com,🎮️ 游戏
+  - DOMAIN-SUFFIX,steamgames.com,🎮️ 游戏
+  - DOMAIN-SUFFIX,steampipe.akamaized.net,🎮️ 游戏
+  - DOMAIN-SUFFIX,steampowered.com,🎮️ 游戏
+  - DOMAIN-SUFFIX,steampowered.com.8686c.com,🎮️ 游戏
+  - DOMAIN-SUFFIX,steamstat.us,🎮️ 游戏
+  - DOMAIN-SUFFIX,steamstatic.com,🎮️ 游戏
+  - DOMAIN-SUFFIX,steamstatic.com.8686c.com,🎮️ 游戏
+  - DOMAIN-SUFFIX,steamstore-a.akamaihd.net,🎮️ 游戏
+  - DOMAIN-SUFFIX,steamunlocked.net,🎮️ 游戏
+  - DOMAIN-SUFFIX,steamusercontent-a.akamaihd.net,🎮️ 游戏
+  - DOMAIN-SUFFIX,steamuserimages-a.akamaihd.net,🎮️ 游戏
+  - DOMAIN-SUFFIX,steamvideo-a.akamaihd.net,🎮️ 游戏
+  - DOMAIN-SUFFIX,underlords.com,🎮️ 游戏
+  - DOMAIN-SUFFIX,valvesoftware.com,🎮️ 游戏
+  - DOMAIN-SUFFIX,wmsjsteam.com,🎮️ 游戏
+  - DOMAIN-SUFFIX,steamchina.com,🎮️ 游戏
+  - DOMAIN-SUFFIX,steamcontent.com,🎮️ 游戏
+  - DOMAIN-SUFFIX,steamserver.net,🎮️ 游戏
+  - DOMAIN-SUFFIX,steamusercontent.com,🎮️ 游戏
+  - DOMAIN-SUFFIX,brawlstars.com,🎮️ 游戏
+  - DOMAIN-SUFFIX,brawlstarsgame.com,🎮️ 游戏
+  - DOMAIN-SUFFIX,ubi.com,🎮️ 游戏
+  - DOMAIN-SUFFIX,ubisoft-orbit-savegames.s3.amazonaws.com,🎮️ 游戏
+  - DOMAIN-SUFFIX,ubisoft-uplay-savegames.s3.amazonaws.com,🎮️ 游戏
+  - DOMAIN-SUFFIX,ubisoft.com,🎮️ 游戏
+  - DOMAIN-SUFFIX,uplay.com,🎮️ 游戏
+  - DOMAIN-SUFFIX,beth.games,🎮️ 游戏
+  - DOMAIN-SUFFIX,bethesda.net,🎮️ 游戏
+  - DOMAIN-SUFFIX,bethesdagamestudios.com,🎮️ 游戏
+  - DOMAIN-SUFFIX,bethsoft.com,🎮️ 游戏
+  - DOMAIN-SUFFIX,callersbane.com,🎮️ 游戏
+  - DOMAIN-SUFFIX,forzamotorsport.net,🎮️ 游戏
+  - DOMAIN-SUFFIX,forzaracingchampionship.com,🎮️ 游戏
+  - DOMAIN-SUFFIX,forzarc.com,🎮️ 游戏
+  - DOMAIN-SUFFIX,gamepass.com,🎮️ 游戏
+  - DOMAIN-SUFFIX,minecraft.net,🎮️ 游戏
+  - DOMAIN-SUFFIX,minecraftshop.com,🎮️ 游戏
+  - DOMAIN-SUFFIX,mojang.com,🎮️ 游戏
+  - DOMAIN-SUFFIX,msgamestudios.com,🎮️ 游戏
+  - DOMAIN-SUFFIX,orithegame.com,🎮️ 游戏
+  - DOMAIN-SUFFIX,renovacionxboxlive.com,🎮️ 游戏
+  - DOMAIN-SUFFIX,tellmewhygame.com,🎮️ 游戏
+  - DOMAIN-SUFFIX,xbox.co,🎮️ 游戏
+  - DOMAIN-SUFFIX,xbox.com,🎮️ 游戏
+  - DOMAIN-SUFFIX,xbox.eu,🎮️ 游戏
+  - DOMAIN-SUFFIX,xbox.org,🎮️ 游戏
+  - DOMAIN-SUFFIX,xbox360.co,🎮️ 游戏
+  - DOMAIN-SUFFIX,xbox360.com,🎮️ 游戏
+  - DOMAIN-SUFFIX,xbox360.eu,🎮️ 游戏
+  - DOMAIN-SUFFIX,xbox360.org,🎮️ 游戏
+  - DOMAIN-SUFFIX,xboxab.com,🎮️ 游戏
+  - DOMAIN-SUFFIX,xboxab.net,🎮️ 游戏
+  - DOMAIN-SUFFIX,xboxgamepass.com,🎮️ 游戏
+  - DOMAIN-SUFFIX,xboxgamestudios.com,🎮️ 游戏
+  - DOMAIN-SUFFIX,xboxlive.cn,🎮️ 游戏
+  - DOMAIN-SUFFIX,xboxlive.com,🎮️ 游戏
+  - DOMAIN-SUFFIX,xboxone.co,🎮️ 游戏
+  - DOMAIN-SUFFIX,xboxone.com,🎮️ 游戏
+  - DOMAIN-SUFFIX,xboxone.eu,🎮️ 游戏
+  - DOMAIN-SUFFIX,xboxplayanywhere.com,🎮️ 游戏
+  - DOMAIN-SUFFIX,xboxservice.com,🎮️ 游戏
+  - DOMAIN-SUFFIX,xboxservices.com,🎮️ 游戏
+  - DOMAIN-SUFFIX,xboxstudios.com,🎮️ 游戏
+  - DOMAIN-SUFFIX,xbx.lv,🎮️ 游戏
+  - DOMAIN-KEYWORD,epicgames,🎮️ 游戏
+  - DOMAIN-KEYWORD,steambroadcast,🎮️ 游戏
+  - DOMAIN-KEYWORD,steamstore,🎮️ 游戏
+  - DOMAIN-KEYWORD,steamuserimages,🎮️ 游戏
+  - IP-CIDR,182.162.135.1/32,🎮️ 游戏,no-resolve
+  - IP-CIDR,210.242.235.6/32,🎮️ 游戏,no-resolve
+  - IP-CIDR,54.94.196.47/32,🎮️ 游戏,no-resolve
+  - IP-CIDR,182.162.132.1/32,🎮️ 游戏,no-resolve
+  - IP-CIDR,182.162.116.1/32,🎮️ 游戏,no-resolve
+  - IP-CIDR,202.9.67.59/32,🎮️ 游戏,no-resolve
+  - IP-CIDR,203.69.111.4/32,🎮️ 游戏,no-resolve
+  - IP-CIDR,54.207.104.145/32,🎮️ 游戏,no-resolve
+  - IP-CIDR,104.192.0.0/12,🎮️ 游戏,no-resolve
+  - IP-CIDR,130.208.0.0/12,🎮️ 游戏,no-resolve
+  - IP-CIDR,34.112.0.0/12,🎮️ 游戏,no-resolve
+  - IP-CIDR,34.128.0.0/12,🎮️ 游戏,no-resolve
+  - IP-CIDR,34.160.0.0/12,🎮️ 游戏,no-resolve
+  - IP-CIDR,34.64.0.0/12,🎮️ 游戏,no-resolve
+  - IP-CIDR,35.176.0.0/12,🎮️ 游戏,no-resolve
+  - IP-CIDR,35.192.0.0/11,🎮️ 游戏,no-resolve
+  - IP-CIDR,35.224.0.0/12,🎮️ 游戏,no-resolve
+  - IP-CIDR,185.60.112.157/32,🎮️ 游戏,no-resolve
+  - IP-CIDR,185.60.114.159/32,🎮️ 游戏,no-resolve
+  - IP-CIDR,203.66.81.98/32,🎮️ 游戏,no-resolve
+  - IP-CIDR,211.234.110.1/32,🎮️ 游戏,no-resolve
+  - IP-CIDR,24.105.30.129/32,🎮️ 游戏,no-resolve
+  - IP-CIDR,24.105.62.129/32,🎮️ 游戏,no-resolve
+  - IP-CIDR,54.207.107.12/32,🎮️ 游戏,no-resolve
+  - IP-CIDR,103.4.114.233/32,🎮️ 游戏,no-resolve
+  - IP-CIDR,202.9.67.254/32,🎮️ 游戏,no-resolve
+  - IP-CIDR,222.231.22.1/32,🎮️ 游戏,no-resolve
+  - IP-CIDR,13.210.25.233/32,🎮️ 游戏,no-resolve
+  - IP-CIDR,13.212.170.102/32,🎮️ 游戏,no-resolve
+  - IP-CIDR,13.212.171.212/32,🎮️ 游戏,no-resolve
+  - IP-CIDR,15.161.130.86/32,🎮️ 游戏,no-resolve
+  - IP-CIDR,15.254.1.17/32,🎮️ 游戏,no-resolve
+  - IP-CIDR,162.62.33.45/32,🎮️ 游戏,no-resolve
+  - IP-CIDR,162.62.33.70/32,🎮️ 游戏,no-resolve
+  - IP-CIDR,162.62.34.10/32,🎮️ 游戏,no-resolve
+  - IP-CIDR,18.141.176.65/32,🎮️ 游戏,no-resolve
+  - IP-CIDR,18.156.137.147/32,🎮️ 游戏,no-resolve
+  - IP-CIDR,18.231.148.103/32,🎮️ 游戏,no-resolve
+  - IP-CIDR,3.1.80.68/32,🎮️ 游戏,no-resolve
+  - IP-CIDR,3.25.190.152/32,🎮️ 游戏,no-resolve
+  - IP-CIDR,3.82.147.36/32,🎮️ 游戏,no-resolve
+  - IP-CIDR,34.220.160.16/32,🎮️ 游戏,no-resolve
+  - IP-CIDR,35.154.64.7/32,🎮️ 游戏,no-resolve
+  - IP-CIDR,35.72.32.125/32,🎮️ 游戏,no-resolve
+  - IP-CIDR,52.13.150.128/32,🎮️ 游戏,no-resolve
+  - IP-CIDR,52.13.42.120/32,🎮️ 游戏,no-resolve
+  - IP-CIDR,52.50.131.212/32,🎮️ 游戏,no-resolve
+  - IP-CIDR,54.207.168.84/32,🎮️ 游戏,no-resolve
+  - IP-CIDR,54.248.64.192/32,🎮️ 游戏,no-resolve
+  - IP-CIDR,103.4.115.248/32,🎮️ 游戏,no-resolve
+  - IP-CIDR,137.221.105.2/32,🎮️ 游戏,no-resolve
+  - IP-CIDR,185.60.112.158/32,🎮️ 游戏,no-resolve
+  - IP-CIDR,210.71.148.11/32,🎮️ 游戏,no-resolve
+  - IP-CIDR,211.115.104.1/32,🎮️ 游戏,no-resolve
+  - RULE-SET,applications,🎯 全球直连
+  - DOMAIN,yacd.haishan.me,🎯 全球直连
+  - RULE-SET,private,🎯 全球直连
+  - RULE-SET,tld-not-cn,PROXY
+  - RULE-SET,gfw,PROXY
+  - RULE-SET,telegramcidr,PROXY
+  - RULE-SET,GOOGLE,PROXY
+  - GEOIP,LAN,DIRECT,no-resolve
+  - GEOIP,CN,🎯 全球直连,no-resolve
+  - MATCH,🐟 漏网之鱼
